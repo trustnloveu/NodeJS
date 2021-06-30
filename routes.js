@@ -55,4 +55,19 @@ const requestHandler = (req, res) => {
   // process.exit();
 };
 
+//* Way 1
 module.exports = requestHandler;
+
+//* Way 2
+// module.exports = {
+//   handler: requestHandler,
+//   someText: "Some text",
+// };
+
+//* Way 3-1
+// module.exports.handler = requestHandler;
+// module.exports.someText = "Some Text";
+
+//* Way 3-2
+// exports.handler = requestHandler;
+// exports.someText = "Some Text";

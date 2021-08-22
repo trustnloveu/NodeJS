@@ -9,7 +9,7 @@ const shopRoutes = require("./routes/shop");
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/admin", adminRoutes);
-app.use("/shop", shopRoutes);
+app.use(shopRoutes);
 
 // 404 : Page not found
 app.use((req, res, next) => {

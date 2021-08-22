@@ -11,16 +11,27 @@
 // const routes = require("./routes");
 
 const express = require("express");
+
 const app = express();
 
-app.use((req, res, next) => {
-  console.log("In the middleware.");
-  next();
+// app.use(express.json()); //{ limit: '50mb' }
+app.use(express.urlencoded({ extended: false }));
+
+app.use("/add-product", (req, res, next) => {
+  console.log("Add Product Path");
+  res.send(
+    "<form action='/product' method='POST'><input type='text' name='title'><button type=submit>Add Product</button></form>"
+  );
 });
 
-app.use((req, res, next) => {
-  console.log("In anohther middleware.");
-  res.send("<h3>Hello from Express!</h3>");
+app.use("/product", (req, res, next) => {
+  console.log(req.body);
+  res.redirect("/");
+});
+
+app.use("/", (req, res, next) => {
+  console.log("Root Path");
+  res.send("<h3>Root Path</h3>");
 });
 
 app.listen(3000);

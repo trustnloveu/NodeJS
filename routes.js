@@ -15,7 +15,7 @@ const requestHandler = (req, res) => {
     res.write("<head><title>My First Page</title></head>");
     res.write("<body>");
     res.write(
-      '<form action="/message" method="POST"><input type="text" name="mesage"><button type="submit">Move</button></button></form>'
+      '<form action="/message" method="POST"><input type="text" name="message"><button type="submit">Move</button></button></form>'
     );
     res.write("</body>");
     res.write("</html>");

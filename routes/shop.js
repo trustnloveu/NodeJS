@@ -23,6 +23,9 @@ router.get("/", (req, res, next) => {
     pageTitle: "Shop",
     path: "/",
     hasProducts: products.length > 0,
+    activeShop: true,
+    productCSS: true,
+    // layout: false, >>> if you don't want to set default layout
   });
 });
 

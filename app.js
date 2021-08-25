@@ -10,7 +10,8 @@ app.engine(
   "hbs",
   expressHbs({
     extname: "hbs",
-    defaultLayout: null,
+    layoutsDir: "views/layouts/",
+    defaultLayout: "main-layout",
   })
 ); // to register new template engine in case it's not built-in
 app.set("view engine", "hbs");

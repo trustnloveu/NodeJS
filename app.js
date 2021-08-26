@@ -1,54 +1,29 @@
 const path = require("path");
 
 const express = require("express");
+
 const app = express();
 
-// const expressHbs = require("express-handlebars");
-
-const users = [];
-
-// app.set("view engine", "pug");
-
-// app.engine("hbs", expressHbs({ defaultLayout: "main-layout", extname: "hbs" }));
-// app.set("view engine", "hbs");
-
+//* Settings
 app.set("view engine", "ejs");
-app.set("views", "views");
+app.set("views", "views"); // default = views
 
-// Routes ...
-// ...
+//* Routes
+const adminData = require("./routes/admin"); // { routes, products }
+const shopRoutes = require("./routes/shop");
 
-// Express Settins
+//* Utils
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-// Navigations
-// index
-app.get("/", (req, res, next) => {
-  res.render("index", {
-    pageTitle: "Add User",
-  });
-});
+//* Navigations
+app.use("/admin", adminData.routes);
+app.use(shopRoutes);
 
-// users
-app.get("/users", (req, res, next) => {
-  res.render("users", {
-    pageTitle: "Users",
-    users: users,
-    hasUsers: users.length > 0,
-  });
-});
-
-// add-user
-app.post("/add-user", (req, res, next) => {
-  users.push({ name: req.body.username });
-  res.redirect("/users");
-});
-
-// 404 Page
+// 404 : Page not found
 app.use((req, res, next) => {
-  res.status(404).render("404", { pageTitle: "Page Not Found", path: null });
+  res.status(404).render("404", { pageTitle: "Page Not Found", path: null }); // path is for ejs 404 page
 });
 
-// Port
+//* Port
 app.listen(3000);

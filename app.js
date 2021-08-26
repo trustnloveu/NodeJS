@@ -3,13 +3,16 @@ const path = require("path");
 const express = require("express");
 const app = express();
 
-const expressHbs = require("express-handlebars");
+// const expressHbs = require("express-handlebars");
 
 const users = [];
 
 // app.set("view engine", "pug");
-app.engine("hbs", expressHbs({ defaultLayout: "main-layout", extname: "hbs" }));
-app.set("view engine", "hbs");
+
+// app.engine("hbs", expressHbs({ defaultLayout: "main-layout", extname: "hbs" }));
+// app.set("view engine", "hbs");
+
+app.set("view engine", "ejs");
 app.set("views", "views");
 
 // Routes ...

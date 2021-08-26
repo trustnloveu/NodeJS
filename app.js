@@ -1,15 +1,14 @@
 const path = require("path");
 
 const express = require("express");
-
 const app = express();
 
 //* Settings
 app.set("view engine", "ejs");
-app.set("views", "views"); // default = views
+app.set("views", "views");
 
 //* Routes
-const adminData = require("./routes/admin"); // { routes, products }
+const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 
 //* Utils
@@ -17,7 +16,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 //* Navigations
-app.use("/admin", adminData.routes);
+app.use("/admin", adminRoutes);
 app.use(shopRoutes);
 
 // 404 : Page not found

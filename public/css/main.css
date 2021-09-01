@@ -46,6 +46,10 @@ main {
     color: #4400B3;
 }
 
+.centered {
+  text-align: center;
+}
+
 .grid {
     display: flex;
     flex-wrap: wrap;

@@ -11,6 +11,12 @@ router.get("/", shopController.getIndex);
 // GET : /products
 router.get("/products", shopController.getProducts);
 
+// GET : /products/delete
+// router.get("/products/delete", shopController.getProductDetail);
+
+// GET : /products/[uuid]
+router.get("/products/:productId", shopController.getProductDetail);
+
 // GET : /cart
 router.get("/cart", shopController.getCart);
 

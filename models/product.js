@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const uuid = require("uuid");
 
 // filePath
 const filePath = path.join(
@@ -31,6 +32,8 @@ module.exports = class Product {
 
   // save
   save() {
+    this.id = uuid.v1(); // time-based unique id
+
     getProductsFromFile((products) => {
       products.push(this);
 

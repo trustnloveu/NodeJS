@@ -23,23 +23,40 @@ const getProductsFromFile = (callBack) => {
 //* export > Product (save, fetchAll)
 module.exports = class Product {
   // constructor
-  constructor(title, imageUrl, description, price) {
+  constructor(id, title, price, imageUrl, description) {
+    this.id = id;
     this.title = title;
+    this.price = price;
     this.imageUrl = imageUrl;
     this.description = description;
-    this.price = price;
   }
 
   // save
   save() {
-    this.id = uuid.v1(); // time-based unique id
-
     getProductsFromFile((products) => {
-      products.push(this);
+      // if editing
+      if (this.id) {
+        const existingProductIndex = products.findIndex(
+          (item) => item.id === this.id
+        );
 
-      fs.writeFile(filePath, JSON.stringify(products), (error) => {
-        console.log(error);
-      });
+        const updatedProducts = [...products];
+        updatedProducts[existingProductIndex] = this; // newly created Product instance
+
+        fs.writeFile(filePath, JSON.stringify(updatedProducts), (error) => {
+          console.log(error);
+        });
+      }
+      // if adding
+      else {
+        this.id = uuid.v1(); // time-based unique id
+
+        products.push(this);
+
+        fs.writeFile(filePath, JSON.stringify(products), (error) => {
+          console.log(error);
+        });
+      }
     });
   }
 

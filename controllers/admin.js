@@ -9,12 +9,13 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
+  // TODO! Add Product Id & Pass it to Product instance below
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
   const price = req.body.price;
 
-  const product = new Product(title, imageUrl, description, price);
+  const product = new Product(null, title, imageUrl, description, price);
 
   product.save();
 
@@ -45,6 +46,22 @@ exports.getEditProduct = (req, res, next) => {
 
 exports.postEditProduct = (req, res, next) => {
   console.log("Post Edit Product in Admin Controllers");
+
+  const productId = req.body.productId;
+  const updatedTitle = req.body.title;
+  const updatedPrice = req.body.price;
+  const updatedImageUrl = req.body.imageUrl;
+  const updatedDescription = req.body.description;
+
+  const updatedProduct = new Product(
+    productId,
+    updatedTitle,
+    updatedPrice,
+    updatedImageUrl,
+    updatedDescription
+  );
+
+  updatedProduct.save();
 };
 
 exports.getProducts = (req, res, next) => {

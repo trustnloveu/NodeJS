@@ -5,20 +5,20 @@ const router = express.Router();
 // Controllers
 const adminController = require("../controllers/admin");
 
+// GET : /admin/list-product
+router.get("/list-product", adminController.getProducts);
+
 // GET : /admin/add-product
 router.get("/add-product", adminController.getAddProduct);
 
-// GET : /admin/list-product
-router.get("/list-product", adminController.getProducts);
+// POST : add-product
+router.post("/add-product", adminController.postAddProduct);
 
 // GET : edit-product
 router.get("/edit-product/:productId", adminController.getEditProduct);
 
 // POST : edit-product
-router.get("/edit-produc", adminController.postEditProduct);
-
-// POST : add-product
-router.post("/add-product", adminController.postAddProduct);
+router.post("/edit-product", adminController.postEditProduct);
 
 //* Export
 module.exports = router;

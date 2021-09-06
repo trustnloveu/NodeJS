@@ -39,7 +39,31 @@ module.exports = class Cart {
       cart.totalPrice = cart.totalPrice + +price;
 
       fs.writeFile(filePath, JSON.stringify(cart), (error) => {
-        console.log(error);
+        console.log("Editing Error ::: " + error);
+      });
+    });
+  }
+
+  // deleteProduct
+  static deleteProduct(id, productPrice) {
+    fs.readFile(filePath, (error, fileContent) => {
+      if (error) {
+        return;
+      }
+
+      const cart = JSON.parse(fileContent);
+
+      const updatedCart = { ...cart };
+      const product = updatedCart.products.find((item) => item.id === id);
+      const productQty = product.qty;
+
+      updatedCart.products = updatedCart.products.filter(
+        (item) => item.id !== id
+      );
+      updatedCart.totalPrice - productPrice * productQty;
+
+      fs.writeFile(filePath, JSON.stringify(updatedCart), (error) => {
+        console.log("Delete Error :::: " + error);
       });
     });
   }

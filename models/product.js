@@ -2,6 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const uuid = require("uuid");
 
+// Model
+const Cart = require("./cart");
+
 // filePath
 const filePath = path.join(
   path.dirname(require.main.filename),
@@ -44,7 +47,7 @@ module.exports = class Product {
         updatedProducts[existingProductIndex] = this; // newly created Product instance
 
         fs.writeFile(filePath, JSON.stringify(updatedProducts), (error) => {
-          console.log(error);
+          console.log("Editing Product Error ::: " + error);
         });
       }
       // if adding
@@ -54,7 +57,7 @@ module.exports = class Product {
         products.push(this);
 
         fs.writeFile(filePath, JSON.stringify(products), (error) => {
-          console.log(error);
+          console.log("Adding Product Error ::: " + error);
         });
       }
     });
@@ -70,6 +73,22 @@ module.exports = class Product {
     getProductsFromFile((products) => {
       const product = products.find((item) => item.id === id);
       callBack(product);
+    });
+  }
+
+  // deleteOne
+  static deleteOne(id) {
+    getProductsFromFile((products) => {
+      const product = products.find((item) => item.id === id);
+      const updatedProducts = products.filter((item) => item.id !== id);
+
+      fs.writeFile(filePath, JSON.stringify(updatedProducts), (error) => {
+        if (!error) {
+          Cart.deleteProduct(id, product.price);
+        } else {
+          console.log("Delete Error ::: " + error);
+        }
+      });
     });
   }
 };

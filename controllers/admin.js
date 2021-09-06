@@ -45,8 +45,6 @@ exports.getEditProduct = (req, res, next) => {
 };
 
 exports.postEditProduct = (req, res, next) => {
-  console.log("Post Edit Product in Admin Controllers");
-
   const productId = req.body.productId;
   const updatedTitle = req.body.title;
   const updatedPrice = req.body.price;
@@ -74,4 +72,12 @@ exports.getProducts = (req, res, next) => {
       path: "/admin/list-product",
     });
   });
+};
+
+exports.deleteProduct = (req, res, next) => {
+  const productId = req.body.productId;
+
+  Product.deleteOne(productId);
+
+  return res.redirect("/admin/list-product");
 };

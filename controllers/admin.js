@@ -62,6 +62,8 @@ exports.postEditProduct = (req, res, next) => {
   );
 
   updatedProduct.save();
+
+  return res.redirect("/admin/list-product");
 };
 
 exports.getProducts = (req, res, next) => {

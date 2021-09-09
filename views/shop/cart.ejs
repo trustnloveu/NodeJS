@@ -3,4 +3,19 @@
 
     <body>
         <%- include("../includes/navbar.ejs") %>
+            <main>
+                <% if (products.lenth> 0) { %>
+                    <ul>
+                        <% products.forEach(item=> { %>
+                            <li>
+                                <%= item.productData.title %> (<%= item.qty %>)
+                            </li>
+                            <% }) %>
+                    </ul>
+                    <% } else { %>
+                        <h4>No Products in Cart</h4>
+                        <% } %>
+
+            </main>
+
             <%- include("../includes/footer.ejs") %>

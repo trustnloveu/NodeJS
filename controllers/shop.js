@@ -46,7 +46,7 @@ exports.getCart = (req, res, next) => {
         );
 
         if (cartProductData) {
-          cartProducts.push({ productItem: product, qty: cartProductData.qty });
+          cartProducts.push({ productData: product, qty: cartProductData.qty });
         }
       }
 

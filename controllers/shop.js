@@ -1,5 +1,5 @@
 //* Product
-const Product = require("../models/product");
+const Product = require("../models/product-mysql");
 const Cart = require("../models/cart");
 
 //* exports

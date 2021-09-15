@@ -3,6 +3,8 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 
 //* exports
+
+// SELECT ALL PRODUCTS (Home)
 exports.getIndex = (req, res, next) => {
   Product.fetchAll()
     .then(([rows, fieldData]) => {
@@ -17,6 +19,7 @@ exports.getIndex = (req, res, next) => {
     });
 };
 
+// SELECT ALL PRODUCTS (Products)
 exports.getProducts = (req, res, next) => {
   Product.fetchAll()
     .then(([rows, fieldData]) => {
@@ -31,14 +34,15 @@ exports.getProducts = (req, res, next) => {
     });
 };
 
+// SELECT ONE PRODUCT
 exports.getProductDetail = (req, res, next) => {
   const productId = req.params.productId;
 
   Product.findById(productId)
-    .then(([row, fieldData]) => {
+    .then(([product, fieldData]) => {
       res.render("shop/product-detail", {
-        product: row[0],
-        pageTitle: "Product Details",
+        product: product[0],
+        pageTitle: product[0].title,
         path: "/products",
       });
     })

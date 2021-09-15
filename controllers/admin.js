@@ -8,6 +8,7 @@ exports.getAddProduct = (req, res, next) => {
   });
 };
 
+// INSERT ONE PRODUCT
 exports.postAddProduct = (req, res, next) => {
   // properties
   const title = req.body.title;

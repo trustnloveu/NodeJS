@@ -5,7 +5,7 @@ const db = require("../util/db");
 const uuid = require("uuid");
 
 // Model
-const Cart = require("./cart");
+// const Cart = require("./cart");
 
 //* export > Product (save, fetchAll, findById, deleteOne)
 module.exports = class Product {

@@ -9,17 +9,22 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.postAddProduct = (req, res, next) => {
-  // TODO! Add Product Id & Pass it to Product instance below
+  // properties
   const title = req.body.title;
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
   const price = req.body.price;
 
-  const product = new Product(null, title, price, imageUrl, description);
+  // Product instance
+  const product = new Product(title, price, imageUrl, description);
 
-  product.save();
-
-  res.redirect("/");
+  // insert
+  product
+    .save()
+    .then(() => {
+      res.redirect("/");
+    })
+    .catch((error) => console.log(error));
 };
 
 exports.getEditProduct = (req, res, next) => {

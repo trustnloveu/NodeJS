@@ -1,33 +1,17 @@
-const fs = require("fs");
-const path = require("path");
+//* DB
+const db = require("../util/db");
+
+//* External Modules
 const uuid = require("uuid");
 
 // Model
 const Cart = require("./cart");
 
-// filePath
-const filePath = path.join(
-  path.dirname(require.main.filename),
-  "data",
-  "products.json"
-);
-
-// getProductsFromFile
-const getProductsFromFile = (callBack) => {
-  fs.readFile(filePath, (error, fileContent) => {
-    if (error) {
-      callBack([]);
-    } else {
-      callBack(JSON.parse(fileContent));
-    }
-  });
-};
-
-//* export > Product (save, fetchAll)
+//* export > Product (save, fetchAll, findById, deleteOne)
 module.exports = class Product {
   // constructor
-  constructor(id, title, price, imageUrl, description) {
-    this.id = id;
+  constructor(title, price, imageUrl, description) {
+    this.id = uuid.v1(); // time-based unique id
     this.title = title;
     this.price = price;
     this.imageUrl = imageUrl;
@@ -36,59 +20,26 @@ module.exports = class Product {
 
   // save
   save() {
-    getProductsFromFile((products) => {
-      // if editing
-      if (this.id) {
-        const existingProductIndex = products.findIndex(
-          (item) => item.id === this.id
-        );
-
-        const updatedProducts = [...products];
-        updatedProducts[existingProductIndex] = this; // newly created Product instance
-
-        fs.writeFile(filePath, JSON.stringify(updatedProducts), (error) => {
-          console.log("Editing Product Error ::: " + error);
-        });
-      }
-      // if adding
-      else {
-        this.id = uuid.v1(); // time-based unique id
-
-        products.push(this);
-
-        fs.writeFile(filePath, JSON.stringify(products), (error) => {
-          console.log("Adding Product Error ::: " + error);
-        });
-      }
-    });
+    return db.execute(
+      "INSERT INTO " +
+        "products (id, title, price, imageUrl, description) " +
+        "VALUES (?, ?, ?, ?, ?)",
+      [this.id, this.title, this.price, this.imageUrl, this.description]
+    );
   }
 
   // fetchAll
-  static fetchAll(callBack) {
-    getProductsFromFile(callBack);
+  static fetchAll() {
+    return db.execute("SELECT * FROM products");
   }
 
   // findById
-  static findById(id, callBack) {
-    getProductsFromFile((products) => {
-      const product = products.find((item) => item.id === id);
-      callBack(product);
-    });
+  static findById(id) {
+    return db.execute(`SELECT * FROM products WHERE id = '${id}'`);
   }
 
   // deleteOne
   static deleteOne(id) {
-    getProductsFromFile((products) => {
-      const product = products.find((item) => item.id === id);
-      const updatedProducts = products.filter((item) => item.id !== id);
-
-      fs.writeFile(filePath, JSON.stringify(updatedProducts), (error) => {
-        if (!error) {
-          Cart.deleteProduct(id, product.price);
-        } else {
-          console.log("Delete Error ::: " + error);
-        }
-      });
-    });
+    return db.deleteOne(`DELETE * FROM products WHERE id = '${id}'`);
   }
 };

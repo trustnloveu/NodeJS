@@ -7,6 +7,17 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+//* DB
+const db = require("./util/db");
+db.execute("SELECT * FROM products")
+  .then((result) => {
+    console.log(result[0]);
+    console.log(result[1]);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
 //* Controller
 const errorController = require("./controllers/error");
 

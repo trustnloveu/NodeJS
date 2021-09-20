@@ -12,20 +12,36 @@ exports.getAddProduct = (req, res, next) => {
 exports.postAddProduct = (req, res, next) => {
   // properties
   const title = req.body.title;
+  const price = req.body.price;
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
-  const price = req.body.price;
 
+  //* New Version ( with Sequelize )
+  Product.create({
+    title: title,
+    price: price,
+    imageUrl: imageUrl,
+    description: description,
+  })
+    .then((result) => {
+      console.log("Create Product Instance Result ::: ");
+      console.log(result);
+    })
+    .catch((error) => {
+      console.log("Create Product Instance Error ::: " + error);
+    });
+
+  //* Old Version ( without Sequelize )
   // Product instance
-  const product = new Product(title, price, imageUrl, description);
+  // const product = new Product(title, price, imageUrl, description);
 
   // insert
-  product
-    .save()
-    .then(() => {
-      res.redirect("/");
-    })
-    .catch((error) => console.log(error));
+  // product
+  //   .save()
+  //   .then(() => {
+  //     res.redirect("/");
+  //   })
+  //   .catch((error) => console.log(error));
 };
 
 exports.getEditProduct = (req, res, next) => {

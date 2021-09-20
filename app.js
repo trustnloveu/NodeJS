@@ -7,6 +7,9 @@ const app = express();
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+//* DB
+const sequelize = require("./util/db");
+
 //* Controller
 const errorController = require("./controllers/error");
 
@@ -25,5 +28,15 @@ app.use(shopRoutes);
 // 404 : Page not found
 app.use(errorController.get404);
 
+sequelize
+  .sync()
+  .then((result) => {
+    console.log(result);
+    app.listen(3000);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
 //* Port
-app.listen(3000);
+// app.listen(3000);

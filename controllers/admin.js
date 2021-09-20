@@ -1,4 +1,4 @@
-const Product = require("../models/product-mysql");
+const Product = require("../models/product-sequelize");
 
 exports.getAddProduct = (req, res, next) => {
   res.render("admin/edit-product", {

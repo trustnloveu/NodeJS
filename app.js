@@ -15,6 +15,8 @@ const Product = require("./models/product-sequelize");
 const User = require("./models/user-sequelize");
 const Cart = require("./models/cart");
 const CartItem = require("./models/cart-item");
+const Order = require("./models/order");
+const OrderItem = require("./models/order-item");
 
 //* Controller
 const errorController = require("./controllers/error");
@@ -47,19 +49,19 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 //* Associations
-Product.belongsTo(User, {
-  constraints: true,
-  onDelete: "CASCADE",
-});
-User.hasMany(Product);
 User.hasOne(Cart);
+User.hasMany(Order);
+User.hasMany(Product);
+Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+Product.belongsToMany(Cart, { through: CartItem });
 Cart.belongsTo(User);
 Cart.belongsToMany(Product, { through: CartItem });
-Product.belongsToMany(Cart, { through: CartItem });
+Order.belongsTo(User);
+Order.belongsToMany(Product, { through: OrderItem });
 
 //* DB Connection
 sequelize
-  .sync() // { force: true }
+  .sync({ force: true }) // { force: true }
   .then(() => {
     return User.findByPk(1);
   })
@@ -70,7 +72,12 @@ sequelize
     return Promise.resolve(user); // just `user` is fine
   })
   .then((user) => {
-    return user.createCart();
+    return Cart.findOne({ where: { userId: user.id } }).then((cart) => {
+      if (!cart) {
+        return user.createCart();
+      }
+      return cart;
+    });
   })
   .then((cart) => {
     app.listen(3000);

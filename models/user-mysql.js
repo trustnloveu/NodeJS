@@ -1,22 +1,19 @@
 //* DB
 const db = require("../util/db");
 
-//* External Modules
-const uuid = require("uuid");
-
 //* Export
 module.exports = class User {
   // constructor
   constructor(name) {
-    this.id = uuid.v1();
     this.name = name;
+    this.email = email;
   }
 
   // save
   save() {
-    return db.execute("INSERT INTO users (id, name) values (?, ?)", [
-      this.id,
+    return db.execute("INSERT INTO users (name, email) values (?, ?)", [
       this.name,
+      this.email,
     ]);
   }
 

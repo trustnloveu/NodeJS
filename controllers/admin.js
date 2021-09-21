@@ -26,6 +26,8 @@ exports.postAddProduct = (req, res, next) => {
     .then((result) => {
       console.log("Create Product Instance Result ::: ");
       // console.log(result);
+
+      res.redirect("/");
     })
     .catch((error) => {
       console.log("Create Product Instance Error ::: ");
@@ -109,7 +111,7 @@ exports.postEditProduct = (req, res, next) => {
     })
     .then((result) => {
       console.log("Result of Updating Product Detail");
-      console.log(result);
+      // console.log(result);
 
       return res.redirect("/admin/list-product");
     })
@@ -169,7 +171,7 @@ exports.deleteProduct = (req, res, next) => {
     })
     .then((result) => {
       console.log("Result of Deleting Product");
-      console.log(result);
+      // console.log(result);
 
       return res.redirect("/admin/list-product");
     })

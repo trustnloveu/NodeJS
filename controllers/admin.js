@@ -20,7 +20,7 @@ exports.postAddProduct = (req, res, next) => {
 
   //* New Version ( with Sequelize )
 
-  req.user // User.create() 대체
+  req.user // Product.create() 대체
     .createProduct({
       id: uuid.v1(),
       title: title,
@@ -64,8 +64,12 @@ exports.getEditProduct = (req, res, next) => {
   const productId = req.params.productId;
 
   //* New Version ( with Sequelize )
-  Product.findByPk(productId)
-    .then((product) => {
+
+  req.user // Product.findByPk(productId), product 대체
+    .getProducts({ where: { id: productId } })
+    .then((products) => {
+      const product = products[0];
+
       if (!product) {
         return res.redirect("/");
       }
@@ -143,7 +147,8 @@ exports.postEditProduct = (req, res, next) => {
 // SELECT PRODUCTS
 exports.getProducts = (req, res, next) => {
   //* New Version ( with Sequelize )
-  Product.findAll()
+  req.user
+    .getProducts() // Product.findAll() 대체
     .then((products) => {
       res.render("admin/list-product", {
         prods: products,

@@ -87,58 +87,118 @@ exports.getProductDetail = (req, res, next) => {
         path: "/products",
       });
     })
-    .catch();
+    .catch((error) => {
+      console.log(error);
+    });
+
+  //* Old Version ( without Sequelize )
+  //   Product.findById(productId)
+  //     .then(([product, fieldData]) => {
+  //       res.render("shop/product-detail", {
+  //         product: product[0],
+  //         pageTitle: product[0].title,
+  //         path: "/products",
+  //       });
+  //     })
+  //     .catch((error) => console.log(error));
+  // };
 };
 
-//* Old Version ( without Sequelize )
-//   Product.findById(productId)
-//     .then(([product, fieldData]) => {
-//       res.render("shop/product-detail", {
-//         product: product[0],
-//         pageTitle: product[0].title,
-//         path: "/products",
-//       });
-//     })
-//     .catch((error) => console.log(error));
-// };
-
 exports.getCart = (req, res, next) => {
-  Cart.getCart((cart) => {
-    Product.fetchAll((products) => {
-      const cartProducts = [];
-
-      for (product of products) {
-        const cartProductData = cart.products.find(
-          (item) => item.id === product.id
-        );
-
-        if (cartProductData) {
-          cartProducts.push({ productData: product, qty: cartProductData.qty });
-        }
-      }
-
-      res.render("shop/cart", {
-        pageTitle: "Your Cart",
-        path: "/cart",
-        products: cartProducts,
-      });
+  //* New Version ( with Sequelize )
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart
+        .getProducts()
+        .then((cartProducts) => {
+          res.render("shop/cart", {
+            pageTitle: "Your Cart",
+            path: "/cart",
+            products: cartProducts,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    })
+    .catch((error) => {
+      console.log(error);
     });
-  });
+  //* Old Version ( without Sequelize )
+  //   Cart.getCart((cart) => {
+  //     Product.fetchAll((products) => {
+  //       const cartProducts = [];
+  //       for (product of products) {
+  //         const cartProductData = cart.products.find(
+  //           (item) => item.id === product.id
+  //         );
+  //         if (cartProductData) {
+  //           cartProducts.push({ productData: product, qty: cartProductData.qty });
+  //         }
+  //       }
+  //       res.render("shop/cart", {
+  //         pageTitle: "Your Cart",
+  //         path: "/cart",
+  //         products: cartProducts,
+  //       });
+  //     });
+  //   });
 };
 
 exports.postCart = (req, res, next) => {
   const productId = req.body.productId;
+  let fetchedCart;
+  let newQuantity = 1;
 
-  Product.findById(productId, (product) => {
-    Cart.addProduct(productId, product.price);
-  });
+  //* New Version ( with Sequelize )
+  req.user
+    .getCart()
+    .then((cart) => {
+      fetchedCart = cart;
+      return cart.getProducts({ where: { id: productId } });
+    })
+    .then((products) => {
+      let product;
 
-  res.redirect("/cart");
+      if (products.length > 0) {
+        product = products[0];
+      }
+
+      if (product) {
+        const oldQuantity = product.CartItem.quantity;
+        newQuantity = oldQuantity + 1;
+        return product; // Promise.resolve(product)
+      }
+
+      return Product.findByPk(productId);
+    })
+    .then((product) => {
+      return fetchedCart.addProduct(product, {
+        through: { quantity: newQuantity },
+      });
+    })
+    .then(() => {
+      res.redirect("/cart");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+
+  //* Old Version ( without Sequelize )
+  // Product.findById(productId, (product) => {
+  //   Cart.addProduct(productId, product.price);
+  // });
+
+  // res.redirect("/cart");
 };
 
 exports.postCartDelete = (req, res, next) => {
   const productId = req.body.productId;
 
+  //* New Version ( with Sequelize )
+
+  //* Old Version ( without Sequelize )
   Product.findById(productId, (product) => {
     Cart.deleteProduct(productId, product.price);
     res.redirect("/cart");

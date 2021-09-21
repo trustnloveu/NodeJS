@@ -59,7 +59,7 @@ Product.belongsToMany(Cart, { through: CartItem });
 
 //* DB Connection
 sequelize
-  .sync({ force: true }) // { force: true }
+  .sync() // { force: true }
   .then(() => {
     return User.findByPk(1);
   })
@@ -70,8 +70,12 @@ sequelize
     return Promise.resolve(user); // just `user` is fine
   })
   .then((user) => {
+    return user.createCart();
+  })
+  .then((cart) => {
     app.listen(3000);
   })
+
   .catch((error) => {
     console.log(error);
   });

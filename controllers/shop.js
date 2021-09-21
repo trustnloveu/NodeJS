@@ -197,12 +197,27 @@ exports.postCartDelete = (req, res, next) => {
   const productId = req.body.productId;
 
   //* New Version ( with Sequelize )
+  req.user
+    .getCart()
+    .then((cart) => {
+      return cart.getProducts({ where: { id: productId } });
+    })
+    .then((products) => {
+      const product = products[0];
+      return product.CartItem.destroy();
+    })
+    .then((result) => {
+      res.redirect("/cart");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 
   //* Old Version ( without Sequelize )
-  Product.findById(productId, (product) => {
-    Cart.deleteProduct(productId, product.price);
-    res.redirect("/cart");
-  });
+  // Product.findById(productId, (product) => {
+  //   Cart.deleteProduct(productId, product.price);
+  //   res.redirect("/cart");
+  // });
 };
 
 exports.getOrders = (req, res, next) => {

@@ -25,6 +25,18 @@ const shopRoutes = require("./routes/shop");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
+//* Middlewares
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then((user) => {
+      req.user = user; // Sequelized User Object
+      next();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+
 //* Navigations
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);
@@ -33,7 +45,10 @@ app.use(shopRoutes);
 app.use(errorController.get404);
 
 //* Associations
-Product.belongsTo(User, { constraints: true, onDelete: "CASCADE" });
+Product.belongsTo(User, {
+  constraints: true,
+  onDelete: "CASCADE",
+});
 User.hasMany(Product);
 
 //* DB Connection

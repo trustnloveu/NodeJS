@@ -1,3 +1,5 @@
+const uuid = require("uuid");
+
 const Product = require("../models/product-sequelize");
 
 exports.getAddProduct = (req, res, next) => {
@@ -17,12 +19,16 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
 
   //* New Version ( with Sequelize )
-  Product.create({
-    title: title,
-    price: price,
-    imageUrl: imageUrl,
-    description: description,
-  })
+
+  req.user // User.create() 대체
+    .createProduct({
+      id: uuid.v1(),
+      title: title,
+      price: price,
+      imageUrl: imageUrl,
+      description: description,
+      // userSequelizeId: req.user.id,
+    })
     .then((result) => {
       console.log("Create Product Instance Result ::: ");
       // console.log(result);

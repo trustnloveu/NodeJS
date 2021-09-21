@@ -13,6 +13,8 @@ const sequelize = require("./util/db");
 //* Models
 const Product = require("./models/product-sequelize");
 const User = require("./models/user-sequelize");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 //* Controller
 const errorController = require("./controllers/error");
@@ -50,10 +52,14 @@ Product.belongsTo(User, {
   onDelete: "CASCADE",
 });
 User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User);
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 //* DB Connection
 sequelize
-  .sync() // { force: true }
+  .sync({ force: true }) // { force: true }
   .then(() => {
     return User.findByPk(1);
   })

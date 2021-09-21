@@ -1,89 +1,105 @@
-const fs = require("fs");
-const path = require("path");
+const { DataTypes } = require("sequelize");
 
-const filePath = path.join(
-  path.dirname(require.main.filename),
-  "data",
-  "cart.json"
-);
+const sequelize = require("../util/db");
 
-module.exports = class Cart {
-  // getCart
-  static getCart(callBack) {
-    fs.readFile(filePath, (error, fileContent) => {
-      const cart = JSON.parse(fileContent);
+const Cart = sequelize.define("Cart", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+});
 
-      if (error) {
-        callBack(null);
-      } else {
-        callBack(cart);
-      }
-    });
-  }
+module.exports = Cart;
 
-  // addProduct
-  static addProduct(id, price) {
-    fs.readFile(filePath, (error, fileContent) => {
-      // Fetch the previous cart
-      let cart = { products: [], totalPrice: 0 };
+//* ================== Old - Hard Coding ==================
+// const fs = require("fs");
+// const path = require("path");
 
-      if (!error) {
-        cart = JSON.parse(fileContent);
-      }
+// const filePath = path.join(
+//   path.dirname(require.main.filename),
+//   "data",
+//   "cart.json"
+// );
 
-      // Analize the cart -> Find existing products
-      const existingProductIndex = cart.products.findIndex(
-        (item) => item.id === id
-      );
-      const existingProduct = cart.products[existingProductIndex];
+// module.exports = class Cart {
+//   // getCart
+//   static getCart(callBack) {
+//     fs.readFile(filePath, (error, fileContent) => {
+//       const cart = JSON.parse(fileContent);
 
-      let updatedProduct;
+//       if (error) {
+//         callBack(null);
+//       } else {
+//         callBack(cart);
+//       }
+//     });
+//   }
 
-      // Add new product, increase quantity
-      if (existingProduct) {
-        updatedProduct = { ...existingProduct };
-        updatedProduct.qty = updatedProduct.qty + 1;
-        cart.products = [...cart.products];
-        cart.products[existingProductIndex] = updatedProduct;
-      } else {
-        updatedProduct = { id: id, qty: 1 };
-        cart.products = [...cart.products, updatedProduct];
-      }
-      cart.totalPrice = cart.totalPrice + +price;
+//   // addProduct
+//   static addProduct(id, price) {
+//     fs.readFile(filePath, (error, fileContent) => {
+//       // Fetch the previous cart
+//       let cart = { products: [], totalPrice: 0 };
 
-      fs.writeFile(filePath, JSON.stringify(cart), (error) => {
-        console.log("Editing Cart Error ::: " + error);
-      });
-    });
-  }
+//       if (!error) {
+//         cart = JSON.parse(fileContent);
+//       }
 
-  // deleteProduct
-  static deleteProduct(id, productPrice) {
-    fs.readFile(filePath, (error, fileContent) => {
-      if (error) {
-        return;
-      }
+//       // Analize the cart -> Find existing products
+//       const existingProductIndex = cart.products.findIndex(
+//         (item) => item.id === id
+//       );
+//       const existingProduct = cart.products[existingProductIndex];
 
-      const cart = JSON.parse(fileContent);
-      const updatedCart = { ...cart };
-      const product = updatedCart.products.find((item) => item.id === id);
+//       let updatedProduct;
 
-      // null check
-      if (!product) {
-        return;
-      }
+//       // Add new product, increase quantity
+//       if (existingProduct) {
+//         updatedProduct = { ...existingProduct };
+//         updatedProduct.qty = updatedProduct.qty + 1;
+//         cart.products = [...cart.products];
+//         cart.products[existingProductIndex] = updatedProduct;
+//       } else {
+//         updatedProduct = { id: id, qty: 1 };
+//         cart.products = [...cart.products, updatedProduct];
+//       }
+//       cart.totalPrice = cart.totalPrice + +price;
 
-      const productQty = product.qty;
+//       fs.writeFile(filePath, JSON.stringify(cart), (error) => {
+//         console.log("Editing Cart Error ::: " + error);
+//       });
+//     });
+//   }
 
-      updatedCart.products = updatedCart.products.filter(
-        (item) => item.id !== id
-      );
-      updatedCart.totalPrice =
-        updatedCart.totalPrice - productPrice * productQty;
+//   // deleteProduct
+//   static deleteProduct(id, productPrice) {
+//     fs.readFile(filePath, (error, fileContent) => {
+//       if (error) {
+//         return;
+//       }
 
-      fs.writeFile(filePath, JSON.stringify(updatedCart), (error) => {
-        console.log("Delete Error :::: " + error);
-      });
-    });
-  }
-};
+//       const cart = JSON.parse(fileContent);
+//       const updatedCart = { ...cart };
+//       const product = updatedCart.products.find((item) => item.id === id);
+
+//       // null check
+//       if (!product) {
+//         return;
+//       }
+
+//       const productQty = product.qty;
+
+//       updatedCart.products = updatedCart.products.filter(
+//         (item) => item.id !== id
+//       );
+//       updatedCart.totalPrice =
+//         updatedCart.totalPrice - productPrice * productQty;
+
+//       fs.writeFile(filePath, JSON.stringify(updatedCart), (error) => {
+//         console.log("Delete Error :::: " + error);
+//       });
+//     });
+//   }
+// };

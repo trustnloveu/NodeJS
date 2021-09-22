@@ -1,0 +1,31 @@
+{
+  "name": "node-mvc-mongo",
+  "version": "1.0.0",
+  "description": "MVC pattern on Node.js",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "yang euijin",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "mysql2": "^2.3.0",
+    "sequelize": "^6.6.5",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trustnloveu"
+  },
+  "keywords": [
+    "nodejs",
+    "mvc",
+    "exercise"
+  ]
+}

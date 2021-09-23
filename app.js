@@ -16,6 +16,7 @@ const errorController = require("./controllers/error");
 //* Routes
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const { application } = require("express");
 
 //* Utils
 app.use(express.urlencoded({ extended: false }));
@@ -31,5 +32,8 @@ app.use(shopRoutes);
 //* 404 : Page not found
 app.use(errorController.get404);
 
-//* Port
-app.listen(3000);
+//* DB Connection & Port
+mongoConnect((client) => {
+  console.log(client);
+  app.listen(3000);
+});

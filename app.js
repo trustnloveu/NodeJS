@@ -8,32 +8,32 @@ app.set("view engine", "ejs");
 app.set("views", "views");
 
 //* DB
-const mongoConnect = require("./util/db");
+const { mongoConnect } = require("./util/db");
 
 //* Controller
 const errorController = require("./controllers/error");
 
 //* Routes
 const adminRoutes = require("./routes/admin");
-const shopRoutes = require("./routes/shop");
-const { application } = require("express");
+// const shopRoutes = require("./routes/shop");
 
 //* Utils
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 //* Middlewares
-app.use((req, res, next) => {});
+app.use((req, res, next) => {
+  next();
+});
 
 //* Navigations
 app.use("/admin", adminRoutes);
-app.use(shopRoutes);
+// app.use(shopRoutes);
 
 //* 404 : Page not found
 app.use(errorController.get404);
 
 //* DB Connection & Port
-mongoConnect((client) => {
-  console.log(client);
+mongoConnect(() => {
   app.listen(3000);
 });

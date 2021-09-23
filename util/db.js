@@ -1,21 +1,18 @@
-//* MySQL2
-// const mysql = require("mysql2");
+const mongodb = require("mongodb");
 
-// const pool = mysql.createPool({
-//   host: "localhost",
-//   user: "root",
-//   database: "node-udemy",
-//   password: "Didtk9310@",
-// });
+const MongoClient = mongodb.MongoClient;
 
-// module.exports = pool.promise();
+const mongoConnect = (callback) => {
+  MongoClient.connect(
+    "mongodb+srv://trustnloveu:didtk9310@@cluster0.uchgl.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+  )
+    .then((client) => {
+      console.log("Connected to MongoDB");
+      callback(client);
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
-//* Sequelize
-const { Sequelize } = require("sequelize"); // Model, DataTyles
-
-const sequelize = new Sequelize("node-udemy", "root", "Didtk9310@", {
-  host: "localhost",
-  dialect: "mysql",
-});
-
-module.exports = sequelize;
+module.exports = mongoConnect();

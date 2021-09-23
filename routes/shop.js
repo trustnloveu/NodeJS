@@ -15,7 +15,7 @@ router.get("/products", shopController.getProducts);
 // router.get("/products/delete", shopController.getProductDetail);
 
 // GET : /products/[uuid]
-// router.get("/products/:productId", shopController.getProductDetail);
+router.get("/products/:productId", shopController.getProductDetail);
 
 // GET : /cart
 // router.get("/cart", shopController.getCart);

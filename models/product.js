@@ -1,8 +1,9 @@
+const { ObjectId } = require("mongodb");
 const { getDb } = require("../util/db");
 
 //* Class
 class Product {
-  // constructor
+  //* constructor
   constructor(title, price, imageUrl, description) {
     this.title = title;
     this.price = price;
@@ -10,7 +11,7 @@ class Product {
     this.description = description;
   }
 
-  // save
+  //* save
   save() {
     const db = getDb();
     return db
@@ -34,6 +35,22 @@ class Product {
       .then((products) => {
         console.log(products);
         return products;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  //* findById
+  static findById(productId) {
+    const db = getDb();
+    return db
+      .collection("products")
+      .find({ _id: ObjectId(productId) })
+      .next()
+      .then((product) => {
+        console.log(product);
+        return product;
       })
       .catch((error) => {
         console.log(error);

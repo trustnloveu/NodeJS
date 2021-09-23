@@ -15,7 +15,7 @@ const errorController = require("./controllers/error");
 
 //* Routes
 const adminRoutes = require("./routes/admin");
-// const shopRoutes = require("./routes/shop");
+const shopRoutes = require("./routes/shop");
 
 //* Utils
 app.use(express.urlencoded({ extended: false }));
@@ -28,7 +28,7 @@ app.use((req, res, next) => {
 
 //* Navigations
 app.use("/admin", adminRoutes);
-// app.use(shopRoutes);
+app.use(shopRoutes);
 
 //* 404 : Page not found
 app.use(errorController.get404);

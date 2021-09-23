@@ -1,37 +1,37 @@
-// //* Product
-// const Product = require("../models/product-sequelize");
+//* Product
+const Product = require("../models/product");
 
 // //* exports
 
-// // SELECT ALL PRODUCTS (Home)
-// exports.getIndex = (req, res, next) => {
-//   Product.fetchAll()
-//     .then(([rows, fieldData]) => {
-//       res.render("shop/index", {
-//         prods: rows,
-//         pageTitle: "Home",
-//         path: "/",
-//       });
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// };
+// SELECT ALL PRODUCTS (Home)
+exports.getIndex = (req, res, next) => {
+  Product.fetchAll()
+    .then((products) => {
+      res.render("shop/index", {
+        prods: products,
+        pageTitle: "Home",
+        path: "/",
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
-// // SELECT ALL PRODUCTS (Products)
-// exports.getProducts = (req, res, next) => {
-//   Product.fetchAll()
-//     .then(([rows, fieldData]) => {
-//       res.render("shop/product-list", {
-//         prods: rows,
-//         pageTitle: "Shop",
-//         path: "/products",
-//       });
-//     })
-//     .catch((error) => {
-//       console.log(error);
-//     });
-// };
+// SELECT ALL PRODUCTS (Products)
+exports.getProducts = (req, res, next) => {
+  Product.fetchAll()
+    .then((products) => {
+      res.render("shop/product-list", {
+        prods: products,
+        pageTitle: "Shop",
+        path: "/products",
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 // // SELECT ONE PRODUCT
 // exports.getProductDetail = (req, res, next) => {

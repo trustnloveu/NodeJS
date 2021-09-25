@@ -31,12 +31,12 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
 
-  const product = new Product(title, price, imageUrl, description);
+  const product = new Product(title, price, imageUrl, description); // 'id' would be null according to constructor of Product
 
   product
     .save()
     .then(() => {
-      res.redirect("/admin/products");
+      res.redirect("/products");
     })
     .catch((error) => {
       console.log(error);

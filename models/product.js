@@ -9,7 +9,7 @@ class Product {
     this.price = price;
     this.imageUrl = imageUrl;
     this.description = description;
-    this._id = ObjectId(id);
+    this._id = id ? ObjectId(id) : null;
   }
 
   //* save

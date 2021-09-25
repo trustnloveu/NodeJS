@@ -3,12 +3,16 @@ const path = require("path");
 const express = require("express");
 const app = express();
 
+//* Models
+const User = require("./models/user");
+
 //* Settings
 app.set("view engine", "ejs");
 app.set("views", "views");
 
 //* DB
 const { mongoConnect } = require("./util/db");
+const { getDb } = require("./util/db");
 
 //* Controller
 const errorController = require("./controllers/error");
@@ -35,5 +39,17 @@ app.use(errorController.get404);
 
 //* DB Connection & Port
 mongoConnect(() => {
+  // Create Default User
+  const db = getDb();
+
+  db.listCollections({ name: "users" }).next((error, collectionInfo) => {
+    if (collectionInfo) {
+      console.log(collectionInfo);
+    } else {
+      const defaultUser = new User("Austin", "trustnloveu@gmail.com");
+      defaultUser.save();
+    }
+  });
+
   app.listen(3000);
 });

@@ -36,7 +36,7 @@ app.use((req, res, next) => {
     .then((user) => {
       console.log(user);
       if (user) {
-        req.user = user;
+        req.user = new User(user._id, user.name, user.email, user.cart);
         next();
       }
     })
@@ -61,7 +61,7 @@ mongoConnect(() => {
     if (collectionInfo) {
       console.log("User Collection Found");
     } else {
-      const defaultUser = new User("Austin", "trustnloveu@gmail.com");
+      const defaultUser = new User(null, "Austin", "trustnloveu@gmail.com");
       defaultUser.save();
     }
   });

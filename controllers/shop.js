@@ -48,36 +48,49 @@ exports.getProductDetail = (req, res, next) => {
     .catch((error) => console.log(error));
 };
 
-// exports.getCart = (req, res, next) => {
-//   Cart.getCart((cart) => {
-//     Product.fetchAll((products) => {
-//       const cartProducts = [];
-//       for (product of products) {
-//         const cartProductData = cart.products.find(
-//           (item) => item.id === product.id
-//         );
-//         if (cartProductData) {
-//           cartProducts.push({ productData: product, qty: cartProductData.qty });
-//         }
-//       }
-//       res.render("shop/cart", {
-//         pageTitle: "Your Cart",
-//         path: "/cart",
-//         products: cartProducts,
-//       });
-//     });
-//   });
-// };
+// SELECT ALL CART ITEMS
+exports.getCart = (req, res, next) => {
+  Cart.fetchAll().then((carts) => {
+    console.log("get Cart Accessed");
 
-// exports.postCart = (req, res, next) => {
-//   const productId = req.body.productId;
+    // render
+    res.render("shop/cart", {
+      pageTitle: "Your Cart",
+      path: "/cart",
+      products: cart,
+    });
+  });
 
-//   Product.findById(productId, (product) => {
-//     Cart.addProduct(productId, product.price);
-//   });
+  // Cart.getCart((cart) => {
+  //   Product.fetchAll((products) => {
+  //     const cartProducts = [];
+  //     for (product of products) {
+  //       const cartProductData = cart.products.find(
+  //         (item) => item.id === product.id
+  //       );
+  //       if (cartProductData) {
+  //         cartProducts.push({ productData: product, qty: cartProductData.qty });
+  //       }
+  //     }
+  //     res.render("shop/cart", {
+  //       pageTitle: "Your Cart",
+  //       path: "/cart",
+  //       products: cartProducts,
+  //     });
+  //   });
+  // });
+};
 
-//   res.redirect("/cart");
-// };
+// INSERT ITEM INTO CART
+exports.postCart = (req, res, next) => {
+  const productId = req.body.productId;
+
+  Product.findById(productId).then((product) => {
+    return req.user.addToCart(product);
+  });
+
+  res.redirect("/cart");
+};
 
 // exports.postCartDelete = (req, res, next) => {
 //   const productId = req.body.productId;
@@ -89,57 +102,57 @@ exports.getProductDetail = (req, res, next) => {
 // };
 
 // exports.getOrders = (req, res, next) => {
-//   // req.user
-//   //   .getOrders({ include: ["products"] })
-//   //   .then((orders) => {
-//   //     res.render("shop/orders", {
-//   //       pageTitle: "Your Orders",
-//   //       path: "/orders",
-//   //       orders: orders,
-//   //     });
-//   //   })
-//   //   .catch((error) => {
-//   //     console.log(error);
-//   //   });
+// req.user
+//   .getOrders({ include: ["products"] })
+//   .then((orders) => {
+//     res.render("shop/orders", {
+//       pageTitle: "Your Orders",
+//       path: "/orders",
+//       orders: orders,
+//     });
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
 // };
 
 // exports.postOrder = (req, res, next) => {
-//   // let fetchedCart;
-//   // req.user
-//   //   .getCart()
-//   //   .then((cart) => {
-//   //     fetchedCart = cart;
-//   //     return cart.getProducts();
-//   //   })
-//   //   .then((products) => {
-//   //     return req.user
-//   //       .createOrder()
-//   //       .then((order) => {
-//   //         return order.addProduct(
-//   //           products.map((product) => {
-//   //             product.OrderItem = { quantity: product.CartItem.quantity };
-//   //             return product;
-//   //           })
-//   //         );
-//   //       })
-//   //       .catch((error) => {
-//   //         console.log(error);
-//   //       });
-//   //   })
-//   //   .then((result) => {
-//   //     return fetchedCart.setProducts(null);
-//   //   })
-//   //   .then((result) => {
-//   //     res.redirect("/orders");
-//   //   })
-//   //   .catch((error) => {
-//   //     console.log(error);
-//   //   });
+// let fetchedCart;
+// req.user
+//   .getCart()
+//   .then((cart) => {
+//     fetchedCart = cart;
+//     return cart.getProducts();
+//   })
+//   .then((products) => {
+//     return req.user
+//       .createOrder()
+//       .then((order) => {
+//         return order.addProduct(
+//           products.map((product) => {
+//             product.OrderItem = { quantity: product.CartItem.quantity };
+//             return product;
+//           })
+//         );
+//       })
+//       .catch((error) => {
+//         console.log(error);
+//       });
+//   })
+//   .then((result) => {
+//     return fetchedCart.setProducts(null);
+//   })
+//   .then((result) => {
+//     res.redirect("/orders");
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
 // };
 
-// // exports.getCheckout = (req, res, next) => {
-// //   res.render("shop/checkout", {
-// //     pageTitle: "Checkout",
-// //     path: "/checkout",
-// //   });
-// // };
+// exports.getCheckout = (req, res, next) => {
+//   res.render("shop/checkout", {
+//     pageTitle: "Checkout",
+//     path: "/checkout",
+//   });
+// };

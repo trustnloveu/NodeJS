@@ -33,7 +33,6 @@ class Product {
       .find()
       .toArray()
       .then((products) => {
-        console.log(products);
         return products;
       })
       .catch((error) => {
@@ -49,12 +48,17 @@ class Product {
       .find({ _id: ObjectId(productId) })
       .next()
       .then((product) => {
-        console.log(product);
         return product;
       })
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  //* deleteOne
+  static deleteOne(productId) {
+    const db = getDb();
+    return db.collection("products");
   }
 }
 

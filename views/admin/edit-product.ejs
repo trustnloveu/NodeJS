@@ -11,7 +11,7 @@
                     action="/admin/<% if (editing) { %>edit-product<% } else { %>add-product<% } %>" method="POST">
 
                     <% if (editing) { %>
-                        <input type="hidden" value="<%= product.id %>" name="productId">
+                        <input type="hidden" value="<%= product._id %>" name="productId">
                         <% } %>
 
                             <div class="form-control">

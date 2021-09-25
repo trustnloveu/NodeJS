@@ -34,7 +34,6 @@ app.use((req, res, next) => {
     .find()
     .next()
     .then((user) => {
-      console.log(user);
       if (user) {
         req.user = new User(user._id, user.name, user.email, user.cart);
         next();

@@ -41,6 +41,31 @@ class User {
       });
   }
 
+  //* getCart
+  getCart() {
+    const db = getDb();
+
+    const productIds = this.cart.items.map((item) => item.productId);
+
+    return db
+      .collection("products")
+      .find({ _id: { $in: productIds } })
+      .toArray()
+      .then((products) => {
+        return products.map((item) => {
+          return {
+            ...item, // product properties
+            quantity: this.cart.items.find((cartItem) => {
+              return cartItem.productId.toString() === item._id.toString();
+            }).quantity,
+          };
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   //* addToCart
   addToCart(product) {
     const cartProductIndex = this.cart.items.findIndex((item) => {
@@ -75,6 +100,50 @@ class User {
     return db
       .collection("users")
       .updateOne({ _id: this._id }, { $set: { cart: updatedCart } })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  //* deleteCart
+  deleteCart(productId) {
+    const cartItems = [...this.cart.items];
+    let filteredItems;
+
+    const cartItemIndex = this.cart.items.findIndex((item) => {
+      return item.productId.toString() === productId.toString();
+    });
+
+    console.log("cartItemIndex ::: ========================================");
+    console.log(cartItemIndex);
+
+    // Item exists
+    if (cartItemIndex >= 0) {
+      filteredItems = cartItems.filter(
+        (item) => item.productId.toString() !== productId.toString()
+      );
+
+      console.log("filteredItems ::: ========================================");
+      console.log(filteredItems);
+    }
+    // Item doesn't exist
+    else {
+      return;
+    }
+
+    // Update DB
+    const db = getDb();
+
+    const updatedCart = {
+      items: filteredItems,
+    };
+
+    return db
+      .collection("users")
+      .updateOne({ _id: this._id }, { $set: { cart: filteredItems } })
       .then((result) => {
         console.log(result);
       })

@@ -24,7 +24,7 @@ router.get("/cart", shopController.getCart);
 router.post("/cart", shopController.postCart);
 
 // POST} : /cart-delete-item
-// router.post("/cart-delete-item", shopController.postCartDelete);
+router.post("/cart-delete-item", shopController.postCartDelete);
 
 // GET : /orders
 // router.get("/orders", shopController.getOrders);

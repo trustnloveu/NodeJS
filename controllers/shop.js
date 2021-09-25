@@ -65,7 +65,7 @@ exports.getCart = (req, res, next) => {
     });
 };
 
-// INSERT ITEM INTO CART
+// UPDATE CART IN USER
 exports.postCart = (req, res, next) => {
   const productId = req.body.productId;
 

@@ -8,7 +8,7 @@ class User {
     this._id = id ? ObjectId(id) : null;
     this.name = name;
     this.email = email;
-    this.cart = cart; // { items : [ ] }
+    this.cart = cart ? cart : { items: [] }; // { items : [ ] }
   }
 
   //* save
@@ -143,7 +143,7 @@ class User {
 
     return db
       .collection("users")
-      .updateOne({ _id: this._id }, { $set: { cart: filteredItems } })
+      .updateOne({ _id: this._id }, { $set: { cart: updatedCart } })
       .then((result) => {
         console.log(result);
       })

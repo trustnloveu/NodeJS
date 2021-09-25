@@ -27,7 +27,22 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //* Middlewares
 app.use((req, res, next) => {
-  next();
+  const db = getDb();
+
+  // set inital user
+  db.collection("users")
+    .find()
+    .next()
+    .then((user) => {
+      console.log(user);
+      if (user) {
+        req.user = user;
+        next();
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 });
 
 //* Navigations
@@ -44,7 +59,7 @@ mongoConnect(() => {
 
   db.listCollections({ name: "users" }).next((error, collectionInfo) => {
     if (collectionInfo) {
-      console.log(collectionInfo);
+      console.log("User Collection Found");
     } else {
       const defaultUser = new User("Austin", "trustnloveu@gmail.com");
       defaultUser.save();

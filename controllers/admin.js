@@ -25,13 +25,24 @@ exports.getProducts = (req, res, next) => {
 
 // INSERT ONE PRODUCT
 exports.postAddProduct = (req, res, next) => {
-  // properties
+  // product properties
   const title = req.body.title;
   const price = req.body.price;
   const imageUrl = req.body.imageUrl;
   const description = req.body.description;
 
-  const product = new Product(title, price, imageUrl, description); // 'id' would be null according to constructor of Product
+  // user properties
+  console.log(req.user);
+  const userId = req.user._id; // ObjectId
+
+  const product = new Product(
+    title,
+    price,
+    imageUrl,
+    description,
+    null,
+    userId
+  ); // 'id' would be null according to constructor of Product
 
   product
     .save()

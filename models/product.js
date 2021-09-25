@@ -9,7 +9,7 @@ class Product {
     this.price = price;
     this.imageUrl = imageUrl;
     this.description = description;
-    this._id = id;
+    this._id = ObjectId(id);
   }
 
   //* save
@@ -67,10 +67,18 @@ class Product {
       });
   }
 
-  //* deleteOne
-  static deleteOne(productId) {
+  //* deleteById
+  static deleteById(productId) {
     const db = getDb();
-    return db.collection("products");
+    return db
+      .collection("products")
+      .deleteOne({ _id: ObjectId(productId) })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 }
 

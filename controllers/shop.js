@@ -50,7 +50,7 @@ exports.getProductDetail = (req, res, next) => {
 
 // SELECT ALL CART ITEMS
 exports.getCart = (req, res, next) => {
-  Cart.fetchAll().then((carts) => {
+  Cart.fetchAll().then((cart) => {
     console.log("get Cart Accessed");
 
     // render

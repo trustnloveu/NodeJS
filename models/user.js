@@ -43,12 +43,33 @@ class User {
 
   //* addToCart
   addToCart(product) {
-    // const cartProduct = this.cart.items.findIndex((item) => {
-    //   return item._id === product._id;
-    // });
+    const cartProductIndex = this.cart.items.findIndex((item) => {
+      return item.productId.toString() === product._id.toString(); // because ObjectId is out of JavaScript
+    });
 
-    const updatedCart = { items: [{ ...product, quantity: 1 }] };
+    let newQty = 1;
+    const updatedCartItems = [...this.cart.items];
 
+    // Item exists
+    if (cartProductIndex >= 0) {
+      newQty = this.cart.items[cartProductIndex].quantity + 1;
+
+      updatedCartItems[cartProductIndex].quantity = newQty; // update
+    }
+    // Item doesn't exist
+    else {
+      // add new one
+      updatedCartItems.push({
+        productId: ObjectId(product._id),
+        quantity: newQty,
+      });
+    }
+
+    const updatedCart = {
+      items: updatedCartItems,
+    };
+
+    // Update DB
     const db = getDb();
 
     return db

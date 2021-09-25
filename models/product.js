@@ -4,19 +4,31 @@ const { getDb } = require("../util/db");
 //* Class
 class Product {
   //* constructor
-  constructor(title, price, imageUrl, description) {
+  constructor(title, price, imageUrl, description, id) {
     this.title = title;
     this.price = price;
     this.imageUrl = imageUrl;
     this.description = description;
+    this._id = id;
   }
 
   //* save
   save() {
     const db = getDb();
-    return db
-      .collection("products") // collection
-      .insertOne(this)
+    let dbOp;
+
+    // Update
+    if (this._id) {
+      dbOp = db
+        .collection("products")
+        .updateOne({ _id: this._id }, { $set: this }); // _id -> ObjectId
+    }
+    // Insert
+    else {
+      dbOp = db.collection("products").insertOne(this);
+    }
+    // Result
+    return dbOp
       .then((result) => {
         console.log(result);
       })

@@ -95,54 +95,40 @@ exports.postCartDelete = (req, res, next) => {
     });
 };
 
-// exports.getOrders = (req, res, next) => {
-// req.user
-//   .getOrders({ include: ["products"] })
-//   .then((orders) => {
-//     res.render("shop/orders", {
-//       pageTitle: "Your Orders",
-//       path: "/orders",
-//       orders: orders,
-//     });
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//   });
-// };
+exports.getOrders = (req, res, next) => {
+  const userId = req.user._id;
 
-// exports.postOrder = (req, res, next) => {
-// let fetchedCart;
-// req.user
-//   .getCart()
-//   .then((cart) => {
-//     fetchedCart = cart;
-//     return cart.getProducts();
-//   })
-//   .then((products) => {
-//     return req.user
-//       .createOrder()
-//       .then((order) => {
-//         return order.addProduct(
-//           products.map((product) => {
-//             product.OrderItem = { quantity: product.CartItem.quantity };
-//             return product;
-//           })
-//         );
-//       })
-//       .catch((error) => {
-//         console.log(error);
-//       });
-//   })
-//   .then((result) => {
-//     return fetchedCart.setProducts(null);
-//   })
-//   .then((result) => {
-//     res.redirect("/orders");
-//   })
-//   .catch((error) => {
-//     console.log(error);
-//   });
-// };
+  return req.user
+    .getOrders(userId)
+    .then((orders) => {
+      console.log("orders ========================================");
+      console.log(orders);
+
+      res.render("shop/orders", {
+        orders: orders,
+        pageTitle: "Orders",
+        path: "/orders",
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
+
+exports.postOrder = (req, res, next) => {
+  const userId = req.user._id;
+
+  return req.user
+    .addOrder(userId)
+    .then((result) => {
+      console.log(result);
+
+      res.redirect("/orders");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
+};
 
 // exports.getCheckout = (req, res, next) => {
 //   res.render("shop/checkout", {

@@ -117,17 +117,11 @@ class User {
       return item.productId.toString() === productId.toString();
     });
 
-    console.log("cartItemIndex ::: ========================================");
-    console.log(cartItemIndex);
-
     // Item exists
     if (cartItemIndex >= 0) {
       filteredItems = cartItems.filter(
         (item) => item.productId.toString() !== productId.toString()
       );
-
-      console.log("filteredItems ::: ========================================");
-      console.log(filteredItems);
     }
     // Item doesn't exist
     else return;
@@ -143,6 +137,61 @@ class User {
       )
       .then((result) => {
         console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  //* getOrders
+  getOrders(userId) {
+    const db = getDb();
+    let productIds;
+
+    return db
+      .collection("orders")
+      .find({ userId: userId })
+      .toArray()
+      .then((orders) => {
+        // return values by refactoring data structure (order > items > { ...product, quantity })
+        return orders.map((order) => {
+          return order.items.map((item) => {
+            db.collection("products")
+              .find((product) => {
+                item.productId.toString() === product._id.toString();
+              })
+              .then((product) => {
+                console.log(product);
+                return {
+                  ...product,
+                  quantity: item.quantity,
+                };
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          });
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  //* addOrder
+  addOrder(userId) {
+    const db = getDb();
+
+    return db
+      .collection("orders")
+      .insertOne({ userId: userId, items: this.cart.items })
+      .then((result) => {
+        // clear cart
+        this.cart = { items: [] };
+
+        return db
+          .collection("users")
+          .updateOne({ _id: this._id }, { $set: { cart: { items: [] } } });
       })
       .catch((error) => {
         console.log(error);

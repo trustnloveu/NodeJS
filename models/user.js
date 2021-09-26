@@ -130,20 +130,17 @@ class User {
       console.log(filteredItems);
     }
     // Item doesn't exist
-    else {
-      return;
-    }
+    else return;
 
     // Update DB
     const db = getDb();
 
-    const updatedCart = {
-      items: filteredItems,
-    };
-
     return db
       .collection("users")
-      .updateOne({ _id: this._id }, { $set: { cart: updatedCart } })
+      .updateOne(
+        { _id: this._id },
+        { $set: { cart: { items: filteredItems } } }
+      )
       .then((result) => {
         console.log(result);
       })

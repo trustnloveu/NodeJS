@@ -116,10 +116,8 @@ exports.getOrders = (req, res, next) => {
 };
 
 exports.postOrder = (req, res, next) => {
-  const userId = req.user._id;
-
   return req.user
-    .addOrder(userId)
+    .addOrder()
     .then((result) => {
       console.log(result);
 

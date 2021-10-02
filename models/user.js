@@ -179,16 +179,22 @@ class User {
   }
 
   //* addOrder
-  addOrder(userId) {
+  addOrder() {
     const db = getDb();
 
-    return db
-      .collection("orders")
-      .insertOne({ userId: userId, items: this.cart.items })
+    return this.getCart()
+      .then((products) => {
+        const order = {
+          items: products,
+          user: {
+            _id: this._id,
+            name: this.name,
+          },
+        };
+        return db.collection("orders").insertOne(order);
+      })
       .then((result) => {
-        // clear cart
         this.cart = { items: [] };
-
         return db
           .collection("users")
           .updateOne({ _id: this._id }, { $set: { cart: { items: [] } } });

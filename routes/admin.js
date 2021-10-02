@@ -6,22 +6,22 @@ const router = express.Router();
 const adminController = require("../controllers/admin");
 
 // GET : /admin/list-product
-router.get("/list-product", adminController.getProducts);
+// router.get("/list-product", adminController.getProducts);
 
 // GET : /admin/add-product
-router.get("/add-product", adminController.getAddProduct);
+// router.get("/add-product", adminController.getAddProduct);
 
 // POST : add-product
-router.post("/add-product", adminController.postAddProduct);
+// router.post("/add-product", adminController.postAddProduct);
 
 // GET : edit-product
-router.get("/edit-product/:productId", adminController.getEditProduct);
+// router.get("/edit-product/:productId", adminController.getEditProduct);
 
 // POST : edit-product
-router.post("/edit-product", adminController.postEditProduct);
+// router.post("/edit-product", adminController.postEditProduct);
 
 // POST : delete-product
-router.post("/delete-product", adminController.deleteProduct);
+// router.post("/delete-product", adminController.deleteProduct);
 
 //* Export
 module.exports = router;

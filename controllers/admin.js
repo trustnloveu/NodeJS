@@ -42,6 +42,7 @@ exports.postAddProduct = (req, res, next) => {
     price: price,
     imageUrl: imageUrl,
     description: description,
+    userId: req.user, //! [ req.user._id ] is typical, but Mongoose will automatically pick one property according to Schema in Product Model
   });
 
   product

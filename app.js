@@ -27,22 +27,22 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
 //* Middlewares
-app.use((req, res, next) => {
-  // const db = getDb();
-  // // set inital user
-  // db.collection("users")
-  //   .find()
-  //   .next()
-  //   .then((user) => {
-  //     if (user) {
-  //       req.user = new User(user._id, user.name, user.email, user.cart);
-  //       next();
-  //     }
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
-});
+// app.use((req, res, next) => {
+// const db = getDb();
+// // set inital user
+// db.collection("users")
+//   .find()
+//   .next()
+//   .then((user) => {
+//     if (user) {
+//       req.user = new User(user._id, user.name, user.email, user.cart);
+//       next();
+//     }
+//   })
+//   .catch((error) => {
+//     console.log(error);
+//   });
+// });
 
 //* Navigations
 app.use("/admin", adminRoutes);

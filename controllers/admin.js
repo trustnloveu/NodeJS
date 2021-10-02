@@ -1,3 +1,4 @@
+//* Model with Schema, based on Mongoose
 const Product = require("../models/product");
 
 exports.getAddProduct = (req, res, next) => {
@@ -32,17 +33,15 @@ exports.postAddProduct = (req, res, next) => {
   const description = req.body.description;
 
   // user properties
-  console.log(req.user);
-  const userId = req.user._id; // ObjectId
+  // console.log(req.user);
+  // const userId = req.user._id; // ObjectId
 
-  const product = new Product(
-    title,
-    price,
-    imageUrl,
-    description,
-    null,
-    userId
-  ); // 'id' would be null according to constructor of Product
+  const product = new Product({
+    title: title,
+    price: price,
+    imageUrl: imageUrl,
+    description: description,
+  });
 
   product
     .save()

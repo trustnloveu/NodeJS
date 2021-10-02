@@ -21,6 +21,7 @@ const errorController = require("./controllers/error");
 //* Routes
 const adminRoutes = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
+const user = require("./models/user");
 
 //* Utils
 app.use(express.urlencoded({ extended: false }));
@@ -54,27 +55,31 @@ app.use(errorController.get404);
 //* DB Connection & Port
 mongoose
   .connect(
-    "mongodb+srv://trustnloveu:didtk9310%40@cluster0.uchgl.mongodb.net/node-udemy?retryWrites=true&w=majority"
+    "mongodb+srv://trustnloveu:didtk9310%40@cluster0.uchgl.mongodb.net/node-udemy?retryWrites=true&w=majority",
+    {
+      // useNewUrlParser: true,
+      // useCreateIndex: true,
+      // useUnifiedTopology: true,
+    }
   )
+  .then((result) => {
+    return User.exists();
+  })
+  .then((isUserExist) => {
+    console.log(isUserExist);
+
+    if (!isUserExist) {
+      const initialUser = new User({
+        name: "Austin",
+        email: "trustnloveu@gmail.com",
+      });
+
+      return initialUser.save();
+    }
+  })
   .then((result) => {
     app.listen(3000);
   })
   .catch((error) => {
     console.log(error);
   });
-
-// mongoConnect(() => {
-//   // Create Default User
-//   const db = getDb();
-
-//   db.listCollections({ name: "users" }).next((error, collectionInfo) => {
-//     if (collectionInfo) {
-//       console.log("User Collection Found");
-//     } else {
-//       const defaultUser = new User(null, "Austin", "trustnloveu@gmail.com");
-//       defaultUser.save();
-//     }
-//   });
-
-//   app.listen(3000);
-// });

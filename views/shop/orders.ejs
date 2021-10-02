@@ -8,14 +8,14 @@
                     <h4>No Orders</h4>
                     <% } else { %>
                         <ul>
-                            <% orders.items.forEach(order=> { %>
+                            <% orders.forEach(order=> { %>
                                 <li>
                                     <h4># <%= order._id %>
                                     </h4>
                                     <ul>
                                         <% order.items.forEach(product=> { %>
                                             <li>
-                                                <%= product.title %> (<%= product.OrderItem.quantity %>)
+                                                <%= product.title %> (<%= product.quantity %>)
                                             </li>
                                             <% }); %>
                                     </ul>

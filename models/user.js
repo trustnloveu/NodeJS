@@ -146,36 +146,8 @@ class User {
   //* getOrders
   getOrders(userId) {
     const db = getDb();
-    let productIds;
 
-    return db
-      .collection("orders")
-      .find({ userId: userId })
-      .toArray()
-      .then((orders) => {
-        // return values by refactoring data structure (order > items > { ...product, quantity })
-        return orders.map((order) => {
-          return order.items.map((item) => {
-            db.collection("products")
-              .find((product) => {
-                item.productId.toString() === product._id.toString();
-              })
-              .then((product) => {
-                console.log(product);
-                return {
-                  ...product,
-                  quantity: item.quantity,
-                };
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-          });
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    return db.collection("orders").find({ "user._id": userId }).toArray();
   }
 
   //* addOrder

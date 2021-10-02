@@ -101,9 +101,6 @@ exports.getOrders = (req, res, next) => {
   return req.user
     .getOrders(userId)
     .then((orders) => {
-      console.log("orders ========================================");
-      console.log(orders);
-
       res.render("shop/orders", {
         orders: orders,
         pageTitle: "Orders",

@@ -5,7 +5,7 @@ const Product = require("../models/product");
 
 // SELECT ALL PRODUCTS (Home)
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render("shop/index", {
         prods: products,
@@ -20,7 +20,7 @@ exports.getIndex = (req, res, next) => {
 
 // SELECT ALL PRODUCTS (Products)
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.find()
     .then((products) => {
       res.render("shop/product-list", {
         prods: products,
@@ -37,7 +37,7 @@ exports.getProducts = (req, res, next) => {
 exports.getProductDetail = (req, res, next) => {
   const productId = req.params.productId;
 
-  Product.findById(productId)
+  Product.findById(productId) //! Mongoose automatically convert String ID to ObjectId
     .then((product) => {
       res.render("shop/product-detail", {
         product: product,

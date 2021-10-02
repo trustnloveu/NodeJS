@@ -6,16 +6,16 @@ const router = express.Router();
 const shopController = require("../controllers/shop");
 
 // GET : /
-// router.get("/", shopController.getIndex);
+router.get("/", shopController.getIndex);
 
 // GET : /products
-// router.get("/products", shopController.getProducts);
+router.get("/products", shopController.getProducts);
 
 // GET : /products/delete
 // router.get("/products/delete", shopController.getProductDetail);
 
-// GET : /products/[uuid]
-// router.get("/products/:productId", shopController.getProductDetail);
+// GET : /products/
+router.get("/products/:productId", shopController.getProductDetail);
 
 // GET : /cart
 // router.get("/cart", shopController.getCart);

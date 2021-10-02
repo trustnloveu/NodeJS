@@ -50,10 +50,12 @@ exports.getProductDetail = (req, res, next) => {
 
 // SELECT ALL CART ITEMS
 exports.getCart = (req, res, next) => {
-  console.log(req.user);
   return req.user
-    .getCart()
-    .then((products) => {
+    .populate("cart.items.productId")
+    .then((user) => {
+      console.log("products ====================");
+      console.log(user.cart.items);
+      const products = user.cart.items;
       res.render("shop/cart", {
         path: "/cart",
         pageTitle: "Your Cart",

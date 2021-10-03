@@ -12,4 +12,10 @@ router.post("/login", authController.postLogin);
 //* POST > /logout
 router.post("/logout", authController.postLogout);
 
+//* GET > /signup
+router.get("/signup", authController.getSignUp);
+
+//* POST > /signup
+router.post("/signup", authController.postSignUp);
+
 module.exports = router;

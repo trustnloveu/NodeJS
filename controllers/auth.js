@@ -9,6 +9,18 @@ exports.getLogin = (req, res, next) => {
   });
 };
 
+exports.getSignUp = (req, res, next) => {
+  res.render("auth/signup", {
+    path: "/signup",
+    pageTitle: "Sign-Up",
+    isAuthenticated: false,
+  });
+};
+
+exports.postSignUp = (req, res, next) => {
+  res.redirect("/");
+};
+
 exports.postLogin = (req, res, next) => {
   //! Cookie
   // res.setHeader("Set-Cookie", "login=true"); //! ; Max-age=10 ; Expires=Date ; Domain= ; Secure ...

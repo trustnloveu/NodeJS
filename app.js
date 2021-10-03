@@ -27,7 +27,7 @@ const authRoutes = require("./routes/auth");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, "public")));
 
-//* Middlewares
+//* Middlewares > Set User
 app.use((req, res, next) => {
   // Get initial User Data -> Attach to req.user
   User.findOne()
@@ -38,6 +38,24 @@ app.use((req, res, next) => {
     .catch((error) => {
       console.log(error);
     });
+});
+
+//* Middlewares > Get Login Cookie
+app.use((req, res, next) => {
+  let isLogin;
+
+  const cookie = req.get("Cookie");
+  const cookieArray = cookie.split(";");
+
+  cookieArray.forEach((element) => {
+    const isLoginIncluded = element.includes("login=");
+    if (isLoginIncluded) {
+      isLogin = element.split("=")[1];
+    }
+  });
+
+  req.isAuthenticated = isLogin;
+  next();
 });
 
 //* Navigations

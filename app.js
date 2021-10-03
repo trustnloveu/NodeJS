@@ -3,7 +3,16 @@ const path = require("path");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const MONGODB_URI =
+  "mongodb+srv://trustnloveu:didtk9310%40@cluster0.uchgl.mongodb.net/node-udemy?retryWrites=true&w=majority";
+
+//* Session
 const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
+const store = new MongoDBStore({
+  uri: MONGODB_URI,
+  collection: "sessions",
+});
 
 //* Models
 const User = require("./models/user");
@@ -28,7 +37,12 @@ const authRoutes = require("./routes/auth");
 app.use(express.urlencoded({ extended: false })); // body-parser
 app.use(express.static(path.join(__dirname, "public"))); // static files
 app.use(
-  session({ secret: "user secret", resave: false, saveUninitialized: false }) // cookie: {Max-age, Expires, ...}
+  session({
+    secret: "user secret",
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  }) // cookie: {Max-age, Expires, ...}
 ); // session
 
 //* Middlewares > Set User
@@ -72,14 +86,11 @@ app.use(errorController.get404);
 
 //* DB Connection & Port
 mongoose
-  .connect(
-    "mongodb+srv://trustnloveu:didtk9310%40@cluster0.uchgl.mongodb.net/node-udemy?retryWrites=true&w=majority",
-    {
-      // useNewUrlParser: true,
-      // useCreateIndex: true,
-      // useUnifiedTopology: true,
-    }
-  )
+  .connect(MONGODB_URI, {
+    // useNewUrlParser: true,
+    // useCreateIndex: true,
+    // useUnifiedTopology: true,
+  })
   .then((result) => {
     return User.exists();
   })

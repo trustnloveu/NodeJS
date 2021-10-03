@@ -18,7 +18,13 @@ exports.postLogin = (req, res, next) => {
     .then((user) => {
       req.session.isLogin = true;
       req.session.user = user;
-      res.redirect("/");
+
+      // (Optional) When you'd like to redirect views, and make it clear redirecting page after the session is saved
+      req.session.save((error) => {
+        console.log(error);
+
+        res.redirect("/");
+      });
     })
     .catch((err) => {
       console.log(err);

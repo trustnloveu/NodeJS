@@ -51,9 +51,11 @@ app.use((req, res, next) => {
   if (!req.session.user) return next();
 
   // If Session is alive, Get User Data -> Attach to req.user
+  //! Object included in Session Object is not the Object, which Mongoose to handle (Not a Mongoose Model giving funtionalities)
+  //! So, you should query and set the Object through MongoDB
   User.findById(req.session.user._id)
     .then((user) => {
-      req.user = user;
+      req.user = user; //! user = Mongoose Model with Functionalities
       next();
     })
     .catch((error) => {

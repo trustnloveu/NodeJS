@@ -3,6 +3,7 @@ const path = require("path");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
+const session = require("express-session");
 
 //* Models
 const User = require("./models/user");
@@ -24,8 +25,11 @@ const shopRoutes = require("./routes/shop");
 const authRoutes = require("./routes/auth");
 
 //* Utils
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: false })); // body-parser
+app.use(express.static(path.join(__dirname, "public"))); // static files
+app.use(
+  session({ secret: "user secret", resave: false, saveUninitialized: false }) // cookie: {Max-age, Expires, ...}
+); // session
 
 //* Middlewares > Set User
 app.use((req, res, next) => {

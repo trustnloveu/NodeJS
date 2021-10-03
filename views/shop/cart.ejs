@@ -6,9 +6,9 @@
         <%- include("../includes/navbar.ejs") %>
             <main>
                 <% if (products.length> 0) { %>
-                    <ul>
+                    <ul class="cart__item-list">
                         <% products.forEach(item=> { %>
-                            <li>
+                            <li class="cart__item">
                                 <%= item.productId.title %> (<%= item.quantity %>)
                                         <form action="/cart-delete-item" method="POST">
                                             <input type="hidden" name="productId" value="<%= item.productId._id %>">

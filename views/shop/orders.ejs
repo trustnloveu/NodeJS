@@ -8,14 +8,14 @@
                 <% if (orders.length <=0) { %>
                     <h4>No Orders</h4>
                     <% } else { %>
-                        <ul>
+                        <ul class="orders">
                             <% orders.forEach(order=> { %>
-                                <li>
+                                <li class="orders__item">
                                     <h4># <%= order._id %>
                                     </h4>
-                                    <ul>
+                                    <ul class="orders__products">
                                         <% order.products.forEach(p=> { %>
-                                            <li>
+                                            <li class="orders__products-item">
                                                 <%= p.product.title %> (<%= p.quantity %>)
                                             </li>
                                             <% }); %>

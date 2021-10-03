@@ -6,7 +6,7 @@ exports.getAddProduct = (req, res, next) => {
     pageTitle: "Add Product",
     path: "/admin/add-product",
     editing: false,
-    isAuthenticated: req.isAuthenticated,
+    isAuthenticated: req.session.isLogin,
   });
 };
 
@@ -16,12 +16,11 @@ exports.getProducts = (req, res, next) => {
     // .select("title price -_id") //! To filter data, whcih you'd like to see or not
     .populate("userId", "name") //! To get all nested data related to ObjectId
     .then((products) => {
-      console.log(products);
       res.render("admin/list-product", {
         prods: products,
         pageTitle: "Admin Products",
         path: "/admin/list-product",
-        isAuthenticated: req.isAuthenticated,
+        isAuthenticated: req.session.isLogin,
       });
     })
     .catch((error) => {
@@ -81,7 +80,7 @@ exports.getEditProduct = (req, res, next) => {
         path: "/admin/add-product",
         editing: editMode,
         product: product,
-        isAuthenticated: req.isAuthenticated,
+        isAuthenticated: req.session.isLogin,
       });
     })
     .catch((error) => {

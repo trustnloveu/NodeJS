@@ -12,7 +12,7 @@ exports.getIndex = (req, res, next) => {
         prods: products,
         pageTitle: "Home",
         path: "/",
-        isAuthenticated: req.isAuthenticated,
+        isAuthenticated: req.session.isLogin,
       });
     })
     .catch((error) => {
@@ -28,7 +28,7 @@ exports.getProducts = (req, res, next) => {
         prods: products,
         pageTitle: "Shop",
         path: "/products",
-        isAuthenticated: req.isAuthenticated,
+        isAuthenticated: req.session.isLogin,
       });
     })
     .catch((error) => {
@@ -39,6 +39,8 @@ exports.getProducts = (req, res, next) => {
 // SELECT ONE PRODUCT
 exports.getProductDetail = (req, res, next) => {
   const productId = req.params.productId;
+  console.log("productId ==============================");
+  console.log(productId);
 
   Product.findById(productId) //! Mongoose automatically convert String ID to ObjectId
     .then((product) => {
@@ -46,7 +48,7 @@ exports.getProductDetail = (req, res, next) => {
         product: product,
         pageTitle: product.title,
         path: "/products",
-        isAuthenticated: req.isAuthenticated,
+        isAuthenticated: req.session.isLogin,
       });
     })
     .catch((error) => console.log(error));
@@ -63,7 +65,7 @@ exports.getCart = (req, res, next) => {
         path: "/cart",
         pageTitle: "Your Cart",
         products: products,
-        isAuthenticated: req.isAuthenticated,
+        isAuthenticated: req.session.isLogin,
       });
     })
     .catch((error) => {
@@ -107,7 +109,7 @@ exports.getOrders = (req, res, next) => {
       orders: orders,
       pageTitle: "Orders",
       path: "/orders",
-      isAuthenticated: req.isAuthenticated,
+      isAuthenticated: req.session.isLogin,
     });
   });
 };

@@ -47,8 +47,11 @@ app.use(
 
 //* Middlewares > Set User
 app.use((req, res, next) => {
-  // Get initial User Data -> Attach to req.user
-  User.findOne()
+  // Login (seesion) Check
+  if (!req.session.user) return next();
+
+  // If Session is alive, Get User Data -> Attach to req.user
+  User.findById(req.session.user._id)
     .then((user) => {
       req.user = user;
       next();
@@ -59,22 +62,22 @@ app.use((req, res, next) => {
 });
 
 //* Middlewares > Get Login Cookie
-app.use((req, res, next) => {
-  let isLogin;
+// app.use((req, res, next) => {
+//   let isLogin;
 
-  const cookie = req.get("Cookie");
-  const cookieArray = cookie.split(";");
+//   const cookie = req.get("Cookie");
+//   const cookieArray = cookie.split(";");
 
-  cookieArray.forEach((element) => {
-    const isLoginIncluded = element.includes("login=");
-    if (isLoginIncluded) {
-      isLogin = element.split("=")[1];
-    }
-  });
+//   cookieArray.forEach((element) => {
+//     const isLoginIncluded = element.includes("login=");
+//     if (isLoginIncluded) {
+//       isLogin = element.split("=")[1];
+//     }
+//   });
 
-  req.isAuthenticated = isLogin;
-  next();
-});
+//   req.isAuthenticated = isLogin;
+//   next();
+// });
 
 //* Navigations
 app.use("/admin", adminRoutes);

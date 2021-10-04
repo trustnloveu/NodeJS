@@ -84,6 +84,13 @@ app.use((req, res, next) => {
 //   next();
 // });
 
+//* Middleware (csurf)
+app.use((req, res, next) => {
+  res.locals.isAuthenticated = req.session.isLogin;
+  res.locals.csrfToken = req.csrfToken();
+  next();
+});
+
 //* Navigations
 app.use("/admin", adminRoutes);
 app.use(shopRoutes);

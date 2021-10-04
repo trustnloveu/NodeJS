@@ -71,10 +71,16 @@ exports.postLogout = (req, res, next) => {
 };
 
 exports.getSignUp = (req, res, next) => {
+  let errorMessage = req.flash("signup-error");
+
+  if (errorMessage.length > 0) errorMessage = errorMessage[0];
+  else errorMessage = undefined;
+
   res.render("auth/signup", {
     path: "/signup",
     pageTitle: "Sign-Up",
-    isAuthenticated: false,
+    errorMessage: errorMessage,
+    // isAuthenticated: false,
   });
 };
 
@@ -82,11 +88,24 @@ exports.postSignUp = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
+  const eamilErrorMessage =
+    "The Email is already registered, please input another one.";
+  const comparePasswordErrorMessage = "The passwords doesn't match.";
+
+  // Password Check
+  if (!(password === confirmPassword)) {
+    req.flash("signup-error", comparePasswordErrorMessage);
+    return res.redirect("/signup");
+  }
 
   // email validation
   User.findOne({ email: email })
     .then((user) => {
-      if (user) return res.redirect("/signup");
+      // Email Check
+      if (user) {
+        req.flash("signup-error", eamilErrorMessage);
+        return res.redirect("/signup");
+      }
 
       // Hash Password
       return bcrypt

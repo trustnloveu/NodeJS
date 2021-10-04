@@ -8,7 +8,8 @@ exports.getLogin = (req, res, next) => {
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    isAuthenticated: false,
+    errorMessage: req.flash("login-error"),
+    // isAuthenticated: false,
   });
 };
 
@@ -23,7 +24,10 @@ exports.postLogin = (req, res, next) => {
   User.findOne({ email: email })
     .then((user) => {
       // Eamil Correction
-      if (!user) return res.redirect("/login");
+      if (!user) {
+        req.flash("login-error", "Invalid eamil or passowrd.");
+        return res.redirect("/login");
+      }
 
       // Password Correction (by comparing hashed password)
       bcrypt

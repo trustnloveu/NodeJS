@@ -15,6 +15,7 @@ const store = new MongoDBStore({
   collection: "sessions",
 });
 const csrfProtection = csrf();
+const flash = require("connect-flash");
 
 //* Models
 const User = require("./models/user");
@@ -47,6 +48,7 @@ app.use(
   }) // cookie: {Max-age, Expires, ...}
 ); // session
 app.use(csrfProtection); // After you initalize session
+app.use(flash());
 
 //* Middlewares > Set User
 app.use((req, res, next) => {

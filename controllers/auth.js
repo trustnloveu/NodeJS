@@ -18,7 +18,30 @@ exports.getSignUp = (req, res, next) => {
 };
 
 exports.postSignUp = (req, res, next) => {
-  res.redirect("/");
+  const email = req.body.email;
+  const password = req.body.password;
+  const confirmPassword = req.body.confirmPassword;
+
+  // email validation
+  User.findOne({ email: email })
+    .then((user) => {
+      if (user) {
+        return res.redirect("/signup");
+      }
+      const newUser = new User({
+        email: email,
+        password: password,
+        // cart: { items: []}
+      });
+
+      return newUser.save();
+    })
+    .then((result) => {
+      res.redirect("/login");
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };
 
 exports.postLogin = (req, res, next) => {

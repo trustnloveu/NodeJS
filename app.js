@@ -96,19 +96,19 @@ mongoose
     // useCreateIndex: true,
     // useUnifiedTopology: true,
   })
-  .then((result) => {
-    return User.exists();
-  })
-  .then((isUserExist) => {
-    if (!isUserExist) {
-      const initialUser = new User({
-        name: "Austin",
-        email: "trustnloveu@gmail.com",
-      });
+  // .then((result) => {
+  //   return User.exists();
+  // })
+  // .then((isUserExist) => {
+  //   if (!isUserExist) {
+  //     const initialUser = new User({
+  //       name: "Austin",
+  //       email: "trustnloveu@gmail.com",
+  //     });
 
-      return initialUser.save();
-    }
-  })
+  //     return initialUser.save();
+  //   }
+  // })
   .then((result) => {
     app.listen(3000);
   })

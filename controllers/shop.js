@@ -13,6 +13,7 @@ exports.getIndex = (req, res, next) => {
         pageTitle: "Home",
         path: "/",
         isAuthenticated: req.session.isLogin,
+        csrfToken: req.csrfToken(),
       });
     })
     .catch((error) => {

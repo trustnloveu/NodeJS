@@ -8,11 +8,13 @@ const MONGODB_URI =
 
 //* Session
 const session = require("express-session");
+const csrf = require("csurf");
 const MongoDBStore = require("connect-mongodb-session")(session);
 const store = new MongoDBStore({
   uri: MONGODB_URI,
   collection: "sessions",
 });
+const csrfProtection = csrf();
 
 //* Models
 const User = require("./models/user");
@@ -44,6 +46,7 @@ app.use(
     store: store,
   }) // cookie: {Max-age, Expires, ...}
 ); // session
+app.use(csrfProtection); // After you initalize session
 
 //* Middlewares > Set User
 app.use((req, res, next) => {

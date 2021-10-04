@@ -88,6 +88,7 @@ exports.postSignUp = (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
+
   const eamilErrorMessage =
     "The Email is already registered, please input another one.";
   const comparePasswordErrorMessage = "The passwords doesn't match.";

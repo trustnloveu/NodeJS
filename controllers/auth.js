@@ -5,10 +5,15 @@ const bcrypt = require("bcryptjs");
 const User = require("../models/user");
 
 exports.getLogin = (req, res, next) => {
+  let errorMessage = req.flash("login-error");
+
+  if (errorMessage.length > 0) errorMessage = errorMessage[0];
+  else errorMessage = undefined;
+
   res.render("auth/login", {
     path: "/login",
     pageTitle: "Login",
-    errorMessage: req.flash("login-error"),
+    errorMessage: errorMessage,
     // isAuthenticated: false,
   });
 };
@@ -20,12 +25,13 @@ exports.postLogin = (req, res, next) => {
   //! Session
   const email = req.body.email;
   const password = req.body.password;
+  const errorMessage = "Invalid eamil or passowrd.";
 
   User.findOne({ email: email })
     .then((user) => {
       // Eamil Correction
       if (!user) {
-        req.flash("login-error", "Invalid eamil or passowrd.");
+        req.flash("login-error", errorMessage);
         return res.redirect("/login");
       }
 
@@ -33,7 +39,10 @@ exports.postLogin = (req, res, next) => {
       bcrypt
         .compare(password, user.password)
         .then((isMatch) => {
-          if (!isMatch) return res.redirect("/login");
+          if (!isMatch) {
+            req.flash("login-error", errorMessage);
+            return res.redirect("/login");
+          }
 
           req.session.isLogin = true;
           req.session.user = user;

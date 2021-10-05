@@ -1,5 +1,18 @@
 //* External Libraries
 const bcrypt = require("bcryptjs");
+const nodemailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport");
+
+// Email Transporter (Send-Gird)
+const transporter = nodemailer.createTransport(
+  sendgridTransport({
+    auth: {
+      //   api_user: "trustnloveu@gmail.com", //! Error occurs
+      api_key:
+        "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",
+    },
+  })
+);
 
 //* Models
 const User = require("../models/user");
@@ -120,12 +133,21 @@ exports.postSignUp = (req, res, next) => {
 
           return newUser.save();
         })
+        .then((result) => {
+          // (Optional) You can redirect view after sending email by chaining another 'then' block
+          res.redirect("/login");
+
+          // Sending Email
+          return transporter.sendMail({
+            to: email,
+            from: "trustnloveu@gmail.com",
+            subject: "Signup is completeed!",
+            html: "<h4>You successfully signed up.</h4>",
+          });
+        })
         .catch((error) => {
           console.log(error);
         });
-    })
-    .then((result) => {
-      res.redirect("/login");
     })
     .catch((error) => {
       console.log(error);

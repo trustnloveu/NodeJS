@@ -18,4 +18,10 @@ router.get("/signup", authController.getSignUp);
 //* POST > /signup
 router.post("/signup", authController.postSignUp);
 
+//* GET > /reset
+router.get("/reset", authController.getReset);
+
+//* POST > /reset
+router.post("/reset", authController.postReset);
+
 module.exports = router;

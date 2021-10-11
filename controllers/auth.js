@@ -16,6 +16,7 @@ const transporter = nodemailer.createTransport(
   })
 );
 
+// Email Sender
 const emailSender = "trustnloveu@gmail.com";
 
 //* Models
@@ -199,8 +200,10 @@ exports.postReset = (req, res, next) => {
       .then((result) => {
         res.redirect("/");
 
+        console.log("123");
+
         // Send Email
-        transporter.sendMail({
+        return transporter.sendMail({
           to: req.body.email, // = user.email
           from: emailSender,
           subject: "Password Reset",
@@ -214,4 +217,29 @@ exports.postReset = (req, res, next) => {
         console.log(error);
       });
   });
+};
+
+exports.getNewPassword = (req, res, next) => {
+  // To retrive toekn
+  const token = req.params.token;
+
+  // Validate token and ex-date of the token
+  User.findOne({ resetToken: token, resetTokenExpiration: { $gt: Date.now() } })
+    .then((user) => {
+      // Error Message
+      let errorMessage = req.flash("new-password-error");
+
+      if (errorMessage.length > 0) errorMessage = errorMessage[0];
+      else errorMessage = undefined;
+
+      res.render("auth/new-password", {
+        path: "/new-password",
+        pageTitle: "New Password",
+        errorMessage: errorMessage,
+        userId: user._id.toString(),
+      });
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };

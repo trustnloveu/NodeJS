@@ -12,7 +12,7 @@ exports.getAddProduct = (req, res, next) => {
 
 // SELECT PRODUCTS
 exports.getProducts = (req, res, next) => {
-  Product.find()
+  Product.find({ userId: req.user._id }) //! For filtering
     // .select("title price -_id") //! To filter data, whcih you'd like to see or not
     .populate("userId", "name") //! To get all nested data related to ObjectId
     .then((products) => {

@@ -1,8 +1,11 @@
 const express = require("express");
+const router = express.Router();
 
+//* Validator
 const { check, body } = require("express-validator"); //! req, header, cookie ...
 
-const router = express.Router();
+//* Model
+const User = require("../models/user");
 
 const authController = require("../controllers/auth");
 
@@ -27,10 +30,20 @@ router.post(
       .isEmail()
       .withMessage("Please enter a valid email.")
       .custom((value, { req }) => {
-        if (value === "trustnloveu@gmail.com") {
-          throw new Error("This is email is forbidden.");
-        }
-        return true;
+        //* Way 1
+        // if (value === "trustnloveu@gmail.com") {
+        //   throw new Error("This is email is forbidden.");
+        // }
+        // return true;
+
+        //* Way 2
+        return User.findOne({ email: value }).then((user) => {
+          if (user) {
+            return Promise.reject(
+              "The Email is already registered, please input another one."
+            );
+          }
+        });
       }),
     body(
       "password",

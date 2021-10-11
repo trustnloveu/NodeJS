@@ -128,46 +128,46 @@ exports.postSignUp = (req, res, next) => {
     return res.redirect("/signup");
   }
 
-  // email validation
-  User.findOne({ email: email })
-    .then((user) => {
-      // Email Check
-      if (user) {
-        req.flash("signup-error", eamilErrorMessage);
-        return res.redirect("/signup");
-      }
+  //! email validation > This logic is moved up to middleware inside route
+  // User.findOne({ email: email })
+  //   .then((user) => {
+  //     // Email Check
+  //     if (user) {
+  //       req.flash("signup-error", eamilErrorMessage);
+  //       return res.redirect("/signup");
+  //     }
 
-      // Hash Password
-      return bcrypt
-        .hash(password, 12)
-        .then((hashedPassword) => {
-          const newUser = new User({
-            email: email,
-            password: hashedPassword,
-            // cart: { items: []} //! Cart will automatically set as it defined in User Schema
-          });
+  // Hash Password
+  return bcrypt
+    .hash(password, 12)
+    .then((hashedPassword) => {
+      const newUser = new User({
+        email: email,
+        password: hashedPassword,
+        // cart: { items: []} //! Cart will automatically set as it defined in User Schema
+      });
 
-          return newUser.save();
-        })
-        .then((result) => {
-          // (Optional) You can redirect view after sending email by chaining another 'then' block
-          res.redirect("/login");
+      return newUser.save();
+    })
+    .then((result) => {
+      // (Optional) You can redirect view after sending email by chaining another 'then' block
+      res.redirect("/login");
 
-          // Sending Email
-          return transporter.sendMail({
-            to: email,
-            from: emailSender,
-            subject: "Signup is completeed!",
-            html: "<h4>You successfully signed up.</h4>",
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      // Sending Email
+      return transporter.sendMail({
+        to: email,
+        from: emailSender,
+        subject: "Signup is completeed!",
+        html: "<h4>You successfully signed up.</h4>",
+      });
     })
     .catch((error) => {
       console.log(error);
     });
+  // })
+  // .catch((error) => {
+  //   console.log(error);
+  // });
 };
 
 exports.getReset = (req, res, next) => {

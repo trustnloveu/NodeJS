@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
 const emailSender = "ejyang@upchain.kr"; // Email Sender
+const { validationResult } = require("express-validator"); // For Validation
 
 // Email Transporter (Send-Gird)
 const transporter = nodemailer.createTransport(
@@ -105,9 +106,21 @@ exports.postSignUp = (req, res, next) => {
   const password = req.body.password;
   const confirmPassword = req.body.confirmPassword;
 
+  // Error Message with connect-falsh
   const eamilErrorMessage =
     "The Email is already registered, please input another one.";
   const comparePasswordErrorMessage = "The passwords doesn't match.";
+
+  // Email Validation
+  const errors = validationResult(req); //! [ { value, msg, param, body } ]
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/signup", {
+      path: "/signup",
+      pageTitle: "Sign-Up",
+      errorMessage: errors.array()[0].msg,
+    });
+  }
 
   // Password Check
   if (!(password === confirmPassword)) {

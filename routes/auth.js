@@ -21,13 +21,13 @@ router.post("/signup", authController.postSignUp);
 //* GET > /reset
 router.get("/reset", authController.getReset);
 
-//* POST > /reset
-router.post("/reset", authController.postReset);
+//* GET > /reset/:token
+router.get("/reset/:token", authController.getNewPassword);
 
 //* POST > /reset
 router.post("/reset", authController.postReset);
 
-//* GET > /new-password/:token
-router.get("/new-password/:token", authController.getNewPassword);
+//* POST > /new-password
+router.post("/new-password", authController.postNewPassword);
 
 module.exports = router;

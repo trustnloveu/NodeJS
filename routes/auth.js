@@ -13,7 +13,19 @@ const authController = require("../controllers/auth");
 router.get("/login", authController.getLogin);
 
 //* POST > /login
-router.post("/login", authController.postLogin);
+router.post(
+  "/login",
+  [
+    check("email").isEmail().withMessage("Invalid eamil or password."),
+    body(
+      "password",
+      "Invalid eamil or password." //! Default Error Message for all the chain below
+    )
+      .isLength({ min: 5, max: 20 })
+      .isAlphanumeric(),
+  ],
+  authController.postLogin
+);
 
 //* POST > /logout
 router.post("/logout", authController.postLogout);

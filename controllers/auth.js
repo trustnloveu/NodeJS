@@ -31,7 +31,11 @@ exports.getLogin = (req, res, next) => {
     path: "/login",
     pageTitle: "Login",
     errorMessage: errorMessage,
-    // isAuthenticated: false,
+    oldInput: {
+      email: "",
+      password: "",
+    },
+    validationErrors: [],
   });
 };
 
@@ -46,12 +50,19 @@ exports.postLogin = (req, res, next) => {
 
   // Email Validation
   const errors = validationResult(req); //! [ { value, msg, param, body } ]
+  console.log("Login Validation Errors");
+  console.log(errors);
 
   if (!errors.isEmpty()) {
     return res.status(422).render("auth/login", {
       path: "/login",
       pageTitle: "Login",
       errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password,
+      },
+      validationErrors: errors.array(),
     });
   }
 
@@ -59,8 +70,17 @@ exports.postLogin = (req, res, next) => {
     .then((user) => {
       // Eamil Correction
       if (!user) {
-        req.flash("login-error", errorMessage);
-        return res.redirect("/login");
+        // req.flash("login-error", errorMessage);
+        return res.status(422).render("auth/login", {
+          path: "/login",
+          pageTitle: "Login",
+          errorMessage: errors.array()[0].msg,
+          oldInput: {
+            email: email,
+            password: password,
+          },
+          validationErrors: errors.array(),
+        });
       }
 
       // Password Correction (by comparing hashed password)
@@ -68,8 +88,17 @@ exports.postLogin = (req, res, next) => {
         .compare(password, user.password)
         .then((isMatch) => {
           if (!isMatch) {
-            req.flash("login-error", errorMessage);
-            return res.redirect("/login");
+            // req.flash("login-error", errorMessage);
+            return res.status(422).render("auth/login", {
+              path: "/login",
+              pageTitle: "Login",
+              errorMessage: errorMessage,
+              oldInput: {
+                email: email,
+                password: password,
+              },
+              validationErrors: [{ param: "email" }, { param: "password" }],
+            });
           }
 
           req.session.isLogin = true;
@@ -128,7 +157,6 @@ exports.postSignUp = (req, res, next) => {
 
   // Email Validation
   const errors = validationResult(req); //! [ { value, msg, param, body } ]
-  console.log(errors.array());
 
   if (!errors.isEmpty()) {
     return res.status(422).render("auth/signup", {

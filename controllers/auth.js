@@ -44,6 +44,17 @@ exports.postLogin = (req, res, next) => {
   const password = req.body.password;
   const errorMessage = "Invalid eamil or password.";
 
+  // Email Validation
+  const errors = validationResult(req); //! [ { value, msg, param, body } ]
+
+  if (!errors.isEmpty()) {
+    return res.status(422).render("auth/login", {
+      path: "/login",
+      pageTitle: "Login",
+      errorMessage: errors.array()[0].msg,
+    });
+  }
+
   User.findOne({ email: email })
     .then((user) => {
       // Eamil Correction
@@ -97,7 +108,12 @@ exports.getSignUp = (req, res, next) => {
     path: "/signup",
     pageTitle: "Sign-Up",
     errorMessage: errorMessage,
-    // isAuthenticated: false,
+    oldInput: {
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    validationErrors: [],
   });
 };
 
@@ -107,18 +123,24 @@ exports.postSignUp = (req, res, next) => {
   const confirmPassword = req.body.confirmPassword;
 
   // Error Message with connect-falsh
-  const eamilErrorMessage =
-    "The Email is already registered, please input another one.";
+  // const eamilErrorMessage = "The Email is already registered, please input another one.";
   const comparePasswordErrorMessage = "The passwords doesn't match.";
 
   // Email Validation
   const errors = validationResult(req); //! [ { value, msg, param, body } ]
+  console.log(errors.array());
 
   if (!errors.isEmpty()) {
     return res.status(422).render("auth/signup", {
       path: "/signup",
       pageTitle: "Sign-Up",
       errorMessage: errors.array()[0].msg,
+      oldInput: {
+        email: email,
+        password: password,
+        confirmPassword: confirmPassword,
+      },
+      validationErrors: errors.array(),
     });
   }
 

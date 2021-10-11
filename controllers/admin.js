@@ -98,6 +98,10 @@ exports.postEditProduct = (req, res, next) => {
 
   Product.findById(productId)
     .then((product) => {
+      // User Check
+      if (product.userId.toString() !== req.user._id.toString())
+        return res.redirect("/");
+
       product.title = updatedTitle;
       product.price = updatedPrice;
       product.imageUrl = updatedImageUrl;
@@ -117,9 +121,11 @@ exports.postEditProduct = (req, res, next) => {
 exports.deleteProduct = (req, res, next) => {
   const productId = req.body.productId;
 
+  //! delteOne is needed for authorization
+  // if (product.userId.toString() !== req.user._id.toString()) return; // TODO : Alert Modal
+
   Product.findByIdAndDelete(productId)
-    .then((result) => {
-      console.log(result);
+    .then((product) => {
       return res.redirect("/admin/list-product");
     })
     .catch((error) => {

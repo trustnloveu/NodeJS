@@ -4,20 +4,18 @@ const crypto = require("crypto");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const sendgridTransport = require("nodemailer-sendgrid-transport");
+const emailSender = "ejyang@upchain.kr"; // Email Sender
 
 // Email Transporter (Send-Gird)
 const transporter = nodemailer.createTransport(
   sendgridTransport({
     auth: {
-      //   api_user: "trustnloveu@gmail.com", //! Error occurs
+      // api_user: "trustnloveu@gmail.com", //! Error occurs
       api_key:
         "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",
     },
   })
 );
-
-// Email Sender
-const emailSender = "trustnloveu@gmail.com";
 
 //* Models
 const User = require("../models/user");
@@ -43,7 +41,7 @@ exports.postLogin = (req, res, next) => {
   //! Session
   const email = req.body.email;
   const password = req.body.password;
-  const errorMessage = "Invalid eamil or passowrd.";
+  const errorMessage = "Invalid eamil or password.";
 
   User.findOne({ email: email })
     .then((user) => {
@@ -195,13 +193,14 @@ exports.postReset = (req, res, next) => {
         user.resetTokenExpiration = Date.now() + 360000;
 
         // Save
-        user.save();
+        return user.save();
       })
       .then((result) => {
-        res.redirect("/");
+        // res.redirect("/");
+        res.redirect(`http://localhost:3000/reset/${token}`);
 
         // Send Email
-        transporter.sendMail({
+        return transporter.sendMail({
           to: req.body.email, // = user.email
           from: emailSender,
           subject: "Password Reset",
@@ -235,7 +234,7 @@ exports.getNewPassword = (req, res, next) => {
         pageTitle: "New Password",
         errorMessage: errorMessage,
         userId: user._id.toString(),
-        postNewPassword: token,
+        passwordToken: token,
       });
     })
     .catch((error) => {
@@ -244,7 +243,7 @@ exports.getNewPassword = (req, res, next) => {
 };
 
 exports.postNewPassword = (req, res, next) => {
-  const newPassword = req.body.passowrd;
+  const newPassword = req.body.password;
   const userId = req.body.userId;
   const passwordToken = req.body.passwordToken;
 
@@ -261,7 +260,7 @@ exports.postNewPassword = (req, res, next) => {
       return bcrypt
         .hash(newPassword, 12)
         .then((hashedPassword) => {
-          resetUser.passowrd = hashedPassword;
+          resetUser.password = hashedPassword;
           resetUser.resetToken = null;
           resetUser.resetTokenExpiration = null;
 

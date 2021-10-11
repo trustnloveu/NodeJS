@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { check } = require("express-validator");
+const { check, body } = require("express-validator"); //! req, header, cookie ...
 
 const router = express.Router();
 
@@ -21,15 +21,24 @@ router.get("/signup", authController.getSignUp);
 //* POST > /signup
 router.post(
   "/signup",
-  check("email")
-    .isEmail()
-    .withMessage("Please enter a valid email.")
-    .custom((value, { req }) => {
-      if (value === "trustnloveu@gmail.com") {
-        throw new Error("This is email is forbidden.");
-      }
-      return true;
-    }),
+  //! Either set sinle validator method or put multiple validation methods like check() in a form of array
+  [
+    check("email")
+      .isEmail()
+      .withMessage("Please enter a valid email.")
+      .custom((value, { req }) => {
+        if (value === "trustnloveu@gmail.com") {
+          throw new Error("This is email is forbidden.");
+        }
+        return true;
+      }),
+    body(
+      "password",
+      "Please enter a valid password, in between 5 and 20 charaters." //! Default Error Message for all the chain below
+    )
+      .isLength({ min: 5, max: 20 })
+      .isAlphanumeric(),
+  ],
   authController.postSignUp
 );
 

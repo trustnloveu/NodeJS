@@ -16,13 +16,15 @@ router.get("/login", authController.getLogin);
 router.post(
   "/login",
   [
-    check("email").isEmail().withMessage("Invalid eamil or password."),
-    body(
-      "password",
-      "Invalid eamil or password." //! Default Error Message for all the chain below
-    )
+    body("email")
+      .isEmail()
+      .withMessage("Invalid eamil or password.")
+      .normalizeEmail(),
+    body("password")
       .isLength({ min: 5, max: 20 })
-      .isAlphanumeric(),
+      .isAlphanumeric()
+      .withMessage("Invalid eamil or password.")
+      .trim(),
   ],
   authController.postLogin
 );
@@ -56,19 +58,23 @@ router.post(
             );
           }
         });
-      }),
+      })
+      .normalizeEmail(),
     body(
       "password",
       "Please enter a valid password, in between 5 and 20 charaters." //! Default Error Message for all the chain below
     )
       .isLength({ min: 5, max: 20 })
-      .isAlphanumeric(),
-    body("confirmPassword").custom((value, { req }) => {
-      if (!(value === req.body.password)) {
-        throw new Error("Passwords doesn't match.");
-      }
-      return true;
-    }),
+      .isAlphanumeric()
+      .trim(),
+    body("confirmPassword")
+      .custom((value, { req }) => {
+        if (!(value === req.body.password)) {
+          throw new Error("Passwords doesn't match.");
+        }
+        return true;
+      })
+      .trim(),
   ],
   authController.postSignUp
 );
